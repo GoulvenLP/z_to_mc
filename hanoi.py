@@ -4,12 +4,16 @@ from copy import deepcopy
 class HanoiDecorator:
     def __init__(self, hanoi_state):
         self.hanoi_state = hanoi_state
-        self.visited_states = []
+        self.parents = dict()
 
     def possible_moves(self):
         moves = self.hanoi_state.possible_moves()
-        self.visited_states.append(deepcopy(self.hanoi_state))  # Enregistre l'état actuel
+        # journaliser les parents pour chaque état suivant
+        for move in moves:
+            self.parents[move] = self.hanoi_state
+
         return moves
+            
 
     def __getattr__(self, attr):
         # Délègue les appels d'attributs/méthodes non surchargés à l'objet décoré
@@ -96,7 +100,7 @@ def bfs_hanoi(initial_state, is_final_state):
 
 def getTrace(hanoi_decorator : HanoiDecorator):
     trace=[]
-    for e in hanoi_decorator.visited_states:
+    for e in hanoi_decorator.parents:
         trace.append(e.towers)
     return trace
 
@@ -117,7 +121,7 @@ def main():
 
         # Affiche les états visités grâce au décorateur
         print("Trace des états visités :")
-        for state in getTrace(decorated_state):
+        for state in getTrace(solution):
             print(state)
     else:
         print("Aucune solution trouvée.")
