@@ -1,7 +1,28 @@
 from collections import deque
 from copy import deepcopy
 
+class HanoiDecorator:
+    def __init__(self, hanoi_state):
+        self.hanoi_state = hanoi_state
+        self.visited_states = []
 
+    def possible_moves(self):
+        moves = self.hanoi_state.possible_moves()
+        self.visited_states.append(deepcopy(self.hanoi_state))  # Enregistre l'état actuel
+        return moves
+
+    def __getattr__(self, attr):
+        # Délègue les appels d'attributs/méthodes non surchargés à l'objet décoré
+        return getattr(self.hanoi_state, attr)
+
+    def __hash__(self):
+        return self.hanoi_state.__hash__()
+
+    def __eq__(self, other):
+        return self.hanoi_state.__eq__(other)
+    
+
+    
 
 class HanoiState:
     def __init__(self, n_towers, ndisk=3):
@@ -73,7 +94,11 @@ def bfs_hanoi(initial_state, is_final_state):
 
     return None  # Aucun chemin trouvé
 
-
+def getTrace(hanoi_decorator : HanoiDecorator):
+    trace=[]
+    for e in hanoi_decorator.visited_states:
+        trace.append(e.towers)
+    return trace
 
 
 def main():
@@ -82,12 +107,18 @@ def main():
     initial_state.initialiser() # mettre les disques sur la première tige
 
     print("Recherche d'une solution...")
-    solution = bfs_hanoi(initial_state, HanoiState.is_final_state)
+    decorated_state = HanoiDecorator(initial_state)
+    solution = bfs_hanoi(decorated_state, HanoiState.is_final_state)
 
     if solution:
         print("Solution trouvée en {} étapes :".format(len(solution) - 1))
         for step, state in enumerate(solution):
             print(f"Étape {step}: {state}")
+
+        # Affiche les états visités grâce au décorateur
+        print("Trace des états visités :")
+        for state in getTrace(decorated_state):
+            print(state)
     else:
         print("Aucune solution trouvée.")
 
