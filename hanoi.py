@@ -1,6 +1,8 @@
 from collections import deque
 from copy import deepcopy
 
+
+
 class HanoiState:
     def __init__(self, n_towers, ndisk=3):
         self.n_towers = n_towers
