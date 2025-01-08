@@ -1,5 +1,5 @@
 from copy import deepcopy
-from hanoi_decorator import HanoiDecorator
+from parent_tracer import ParentTracer
 
 class HanoiState:
     def __init__(self, n_towers, ndisk=3):
@@ -32,8 +32,8 @@ class HanoiState:
                             new_state = HanoiState(self.n_towers)
                             new_state.setDisks(new_towers)
 
-                            # Décorez l'état avec HanoiDecorator
-                            decorated_state = HanoiDecorator(new_state)
+                            # Décorez l'état avec ParentTracer
+                            decorated_state = ParentTracer(new_state)
                             moves.append(decorated_state)
         return moves
 
