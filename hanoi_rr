@@ -45,7 +45,7 @@ class HanoiRR(RootedRelation):
                 for dest_tower in self.towers:
                     if dest_tower != src_tower:
                         allowed, next_possible_config = \
-                            move(configuration, self.towers.index(src_tower), \
+                            self.move(configuration, self.towers.index(src_tower), \
                                  self.towers.index(dest_tower))
 
                 if (allowed):
@@ -54,7 +54,7 @@ class HanoiRR(RootedRelation):
 
         return actions
 
-    def execute(self, action):
+    def execute(self, hanoi, action):
         """
             Executes the given action
             @action: action to execute
