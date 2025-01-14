@@ -1,42 +1,61 @@
 from rooted_graph import RootedGraph
 
 class ParentTracer(RootedGraph):
-    def __init__(self, hanoi_state):
-        self.hanoi_state = hanoi_state
-        self.parents = dict()
+    def __init__(self, operand):
+        self.operand = operand
+        self.parents = {}
 
-    def neighbors(self):
-        moves = self.hanoi_state.possible_moves()
+        """     def neighbors(self):
+        moves = self.hanoi_state.neighbors()
         decorated_moves = []
         for move in moves:
             # Décorez chaque état enfant
             decorated_move = ParentTracer(move)
             # Journalisez le parent
-            decorated_move.parents[decorated_move] = self
+            decorated_move.parents[decorated_move] = self.hanoi_state
             decorated_moves.append(decorated_move)
-        return decorated_moves
+        return decorated_moves """
 
-    # TODO FIX THIS (n, k)
-    def getTrace(self, final_state):
+    def neighbors(self, v):
+        moves = self.operand.neighbors(v)
+        for move in moves:
+            if move not in self.parents:
+                self.parents[move] = [v]
+            #elif self.parents[move] == []:
+            #    self.parents[move] = [v]
+        return moves
+
+    def roots(self):
+        roots = self.operand.roots()
+        for root in roots:
+            self.parents[root] = []
+        return roots
+
+
+
+    def getTrace(self, initial_state, final_state):
         """
         Construit la trace complète en partant de l'état final.
-        :param final_state: L'état final (instance de HanoiDecorator).
+        :param final_state: L'état final (instance de HanoiState).
         :return: Une liste des états de la trace.
         """
-        trace = []
-        current_state = final_state
-        while current_state:
-            trace.append(current_state.towers)
-            current_state = self.parents.get(current_state)
-        return list(reversed(trace))  # pour avoir les tours de gauche à droite
+        path = []
+        state = final_state
+        while self.parents[state] !=  []: # l'etat est un etat initial
+            path.append(state)
+            state = self.parents[state][0]
+        path.append(state)
+        return list(reversed(path))
+        
+
 
 
     def __getattr__(self, attr):
         # Délègue les appels d'attributs/méthodes non surchargés à l'objet décoré
-        return getattr(self.hanoi_state, attr)
+        return getattr(self.operand, attr)
 
     def __hash__(self):
-        return hash(self.hanoi_state)
+        return hash(self.operand)
 
     def __eq__(self, other):
-        return self.hanoi_state == other.hanoi_state
+        return self.operand == other.hanoi_state
