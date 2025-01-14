@@ -11,7 +11,7 @@ class RR2RG(RootedGraph):
     def neighbors(self, c):
         """
         Génère les voisins d'un état donné en appliquant les actions possibles.
-        :param c: État actuel (instance de HanoiState ou équivalent).
+        :param c: État actuel (instance de  ou équivalent).
         :return: Liste des états voisins.
         """
         # Actions possibles à partir de l'état actuel
@@ -19,3 +19,5 @@ class RR2RG(RootedGraph):
         # Exécuter chaque action pour obtenir les états voisins
         neighbors = [self.op.execute(c, action) for action in actions]
         return neighbors
+
+

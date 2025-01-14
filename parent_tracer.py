@@ -5,17 +5,6 @@ class ParentTracer(RootedGraph):
         self.operand = operand
         self.parents = {}
 
-        """     def neighbors(self):
-        moves = self.hanoi_state.neighbors()
-        decorated_moves = []
-        for move in moves:
-            # Décorez chaque état enfant
-            decorated_move = ParentTracer(move)
-            # Journalisez le parent
-            decorated_move.parents[decorated_move] = self.hanoi_state
-            decorated_moves.append(decorated_move)
-        return decorated_moves """
-
     def neighbors(self, v):
         moves = self.operand.neighbors(v)
         for move in moves:
@@ -33,7 +22,7 @@ class ParentTracer(RootedGraph):
 
 
 
-    def getTrace(self, initial_state, final_state):
+    def getTrace(self, final_state):
         """
         Construit la trace complète en partant de l'état final.
         :param final_state: L'état final (instance de HanoiState).
@@ -47,9 +36,6 @@ class ParentTracer(RootedGraph):
         path.append(state)
         return list(reversed(path))
         
-
-
-
     def __getattr__(self, attr):
         # Délègue les appels d'attributs/méthodes non surchargés à l'objet décoré
         return getattr(self.operand, attr)

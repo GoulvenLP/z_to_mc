@@ -1,66 +1,108 @@
-from enum_config_alice_bob import EConfig
+from rooted_relation import RootedRelation
+from rr2rg import RR2RG
+from predicate_finder import predicate_finder
+from parent_tracer import ParentTracer
 
-
-class AliceBobConfig:
-
-    def __init__(self, state_alice, state_bob):
-        self.tuple_alice_bob = (state_alice, state_bob)
-        self.strategy = EConfig.BASIC
-    
-
-    def action(config):
+class AliceBobConfig(RootedRelation):
+    def __init__(self, initial_state):
         """
-            returns the possible moves applied to a submitted configuration
-            a configuration is made of a tuple (alice, bob)
+        Initialise l'état initial d'Alice et Bob.
+        :param initial_state: tuple représentant l'état initial (Alice, Bob).
         """
-        self.config.action(config)
-        
-        nextAlice = None
-        nextBob = None
-        # possible moves on alice
-        if (self.tuple_alice_bob[0] == 'i'):
-            nextAlice = 'w'
-        if (self.tuple_alice_bob[0] == 'w' and self.tuple_alice_bob[1] == 'i' ):
-            nextAlice = 'c'
-        if (self.tuple_alice_bob[0] == 'c'):
-            nextAlice = 'i'
-        
-        #possible moves on bob
-        if (self.tuple_alice_bob[1] == 'i'):
-            nextBob = 'w'
-        if (self.tuple_alice_bob[0] == 'w' and self.tuple_alice_bob[1] == 'i' ):
-            nextBob = 'c'
-        if (self.tuple_alice_bob[1] == 'c'):
-            nextBob = 'i'
-        
-        return self.config(nextAlice, nextBob)
-    
+        self.tuple_alice_bob = initial_state
 
-    def setStrategy(mode: EConfig):
+    def initial(self):
         """
-            Sets the chosen strategy for the automate
+        Retourne l'état initial de l'automate.
         """
-        self.strategy = mode
-        if (mode == EConfig.BASIC):
-            #TODO implement
-            self.tuple_alice_bob = 
-            pass
-        elif (mode == EConfig.DEADLOCKS):
-            #TODO implement
-            pass
-        elif (mode == EConfig.ADVANCED):
-            #TODO implement something
-            pass
-    
-
-    def execute(config):
-        self.action(config)
-
-    def getTuple():
         return self.tuple_alice_bob
 
+    def actions(self, config):
+        """
+        Retourne les actions possibles pour une configuration donnée.
+        Une action change l'état d'Alice ou de Bob tout en respectant les contraintes.
+        :param config: Configuration actuelle (Alice, Bob).
+        :return: Ensemble des configurations accessibles.
+        """
+        current_alice, current_bob = config
+        actions = []
 
-if (__name__ == '__main__'):
-    automate = AliceBobConfig('i', 'i')
-    automate.setStrategy(EConfig.BASIC)
-    automate.action(automate.getTuple())
+        # Actions pour Alice
+        if current_alice == 'i':
+            actions.append(('w', current_bob))  
+        elif current_alice == 'w' and current_bob == 'i': 
+            actions.append(('c', current_bob))
+        elif current_alice == 'c':
+            actions.append(('i', current_bob))  # Alice retourne à 'i'
+
+        # Actions pour Bob
+        if current_bob == 'i':
+            actions.append((current_alice, 'w')) 
+        elif current_bob == 'w' and current_alice == 'i':  
+            actions.append((current_alice, 'c'))
+        elif current_bob == 'c':
+            actions.append((current_alice, 'i'))  
+
+        return set(actions)
+
+
+
+    def execute(self, config, action):
+        """
+        Applique une action et retourne le nouvel état.
+        :param config: Configuration actuelle (Alice, Bob).
+        :param action: Action à appliquer (nouvel état).
+        :return: Nouvelle configuration.
+        """
+        return action
+
+
+def main():
+    print("------- Alice & Bob -------")
+
+    # Initialisation de l'automate avec AliceBobConfig
+    alice_bob_rr = AliceBobConfig(initial_state=('i', 'i'))
+
+    # Conversion en graphe raciné avec RR2RG
+    alice_bob_graph = ParentTracer(RR2RG(alice_bob_rr))
+
+    print("[+] Vérification de la propriété : (c, c) ")
+
+    # Vérifier si un état interdit est accessible
+    solution = predicate_finder(
+        alice_bob_graph,
+        lambda state: state == ('c', 'c')  # État interdit : Alice et Bob à 'c'
+    )
+
+    if solution:
+        print("[+] La propriété (c, c) n'est pas respectée.")
+        print(f"[+] État trouvé : {solution}")
+
+        print("[+] Trace :")
+        trace = alice_bob_graph.getTrace(solution)
+        for state in trace:
+            print(state)
+    else:
+        print("[-] La propriété (c, c) est respectée.")
+
+    print("\n[+] Vérification de l'absence de deadlock...")
+
+    # Vérifier s'il existe un état de deadlock
+    deadlock_state = predicate_finder(
+        alice_bob_graph,
+        lambda state: len(alice_bob_rr.actions(state)) == 0  # Deadlock si aucune action n'est possible
+    )
+
+    if deadlock_state:
+        print("[+] Deadlock détecté.")
+        print(f"[+] État de deadlock : {deadlock_state}")
+
+        print("[+] Trace :")
+        trace = alice_bob_graph.getTrace(deadlock_state)
+        for state in trace:
+            print(state)
+    else:
+        print("[-] Aucun deadlock détecté.")
+
+if __name__ == '__main__':
+    main()

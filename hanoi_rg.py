@@ -47,7 +47,7 @@ def main():
         print(solution.towers)
 
         print("[+] Trace de la solution:")
-        trace = graph.getTrace(hanoi.state, solution)
+        trace = graph.getTrace(solution)
         for state in trace:
             print(state)
     else:
