@@ -1,6 +1,7 @@
+from rooted_graph import RootedGraph
 from rooted_relation import RootedRelation
 
-class RR2RG(RootedRelation):
+class RR2RG(RootedGraph):
     def __init__(self, op : RootedRelation):
         self.op = op
 

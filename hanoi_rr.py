@@ -51,7 +51,6 @@ class HanoiRR(RootedRelation):
                 if (allowed):
                     actions.append(next_possible_config)
         
-
         return actions
 
     def execute(self, hanoi, action):
