@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 class RootedRelation(ABC):
-    
     @abstractmethod
     def initial(self):
         pass
