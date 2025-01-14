@@ -1,4 +1,5 @@
 from rooted_relation import RootedRelation
+import copy
 
 class HanoiRR(RootedRelation):
 
@@ -54,9 +55,13 @@ class HanoiRR(RootedRelation):
 
         return actions
 
-    def execute(self, hanoi, action):
+    def execute(self, configuration, action):
         """
             Executes the given action
+            We work there on a copy!
             @action: action to execute
         """
-        pass
+        updated_config = copy.deepcopy(configuration)
+        updated_config = action
+        return updated_config        
+        
