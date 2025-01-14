@@ -95,18 +95,20 @@ def main():
     print("[+] Vérification propriété (c, c) interdite...")
 
     # Utilisation de predicate_finder pour trouver une solution
-    solution = predicate_finder(
+    solution_interdite = predicate_finder(
         alice_bob_graph, 
-        lambda state: (state[0] == 'c' and state[1] != 'c') or (state[0] != 'c' and state[1] == 'c')  # État interdit : Alice et Bob à 'c' simultanément
+        lambda state: (state[0] == 'c' and state[1] == 'c')  # État interdit : Alice et Bob à 'c' simultanément
     )
 
-    if solution:
+    if solution_interdite:
         print("[+] Une solution valide a été trouvée !")
-        print(f"[+] État trouvé : {solution}")
+        print(f"[+] État trouvé : {solution_interdite}")
     else:
-        print("[-] Aucune solution valide trouvée.")
+        print("[-] Aucune solution interdite trouvée.")
 
-
+    
+    print("[+] Vérification de l'existence de deadlock...")
+    
     # Utilisation de predicate_finder pour trouver un deadlock
     deadlock = predicate_finder(
         alice_bob_graph, 
