@@ -4,10 +4,10 @@ from rooted_graph import RootedGraph
 
 def predicate_finder(graph: RootedGraph, predicate):
     """
-    Recherche en largeur pour résoudre le problème des tours de Hanoï.
-    :param graph: Le graphe représentant le jeu.
-    :param predicate: La condition pour trouver l'état final.
-    :return: L'état final trouvé.
+    Recherche en largeur pour résoudre le 'predicate' au sein d'un graphe.
+    :param graph: Le graphe à parcourir.
+    :param predicate: La condition à résoudre.
+    :return: L'état final trouvé, est 'None' si aucun cas correspondant au prédicat n'est trouvé
     """
     queue = deque([(state) for state in graph.roots()])
 
