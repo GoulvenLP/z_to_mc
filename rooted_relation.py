@@ -10,6 +10,6 @@ class RootedRelation(ABC):
         pass
 
     @abstractmethod
-    def execute(self, hanoi, action):
+    def execute(self, configuration, action):
         pass
     
