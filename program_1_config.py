@@ -1,3 +1,6 @@
+from piece import Piece
+from soup import Soup
+
 
 class Program1Config:
 
@@ -21,3 +24,25 @@ class Program1Config:
         return False
     
 
+def program1():
+     
+    def ap1(config : Program1Config):
+        config.x += 2
+        config.pc +=1
+
+    p1 = Piece("p1", lambda config : config.pc == 1, ap1)
+
+    def ap1(config : Program1Config):
+        config.x += 3
+        config.pc +=1
+
+    p2 = Piece("p2", lambda config : config.pc == 2, ap1)
+
+    return Soup(Program1Config(), [p1, p2])
+
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
