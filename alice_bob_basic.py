@@ -5,6 +5,11 @@ from predicate_finder import predicate_finder
 class AliceBobBasic(RootedRelation):
 
     def __init__(self, alice, bob):
+        """
+            initialisation. States can be 'i' or 'c'
+            @alice: initial state of alice
+            @bobo: initial state of bob
+        """
         self.tuple_alice_bob = (alice, bob)
     
 
@@ -45,6 +50,8 @@ class AliceBobBasic(RootedRelation):
     def execute(self, config, action):
         """
             executes the move 'action' on config
+            @config: config where to apply the action
+            @action: action to apply
         """
         return action
 

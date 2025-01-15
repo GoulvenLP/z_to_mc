@@ -5,6 +5,11 @@ from predicate_finder import predicate_finder
 class AliceBobAdvanced(RootedRelation):
 
     def __init__(self, alice, bob):
+        """
+            initialisation. States can be 'i' or 'c'
+            @alice: initial state of alice
+            @bobo: initial state of bob
+        """
         self.tuple_alice_bob = (alice, bob)
     
 
@@ -19,7 +24,8 @@ class AliceBobAdvanced(RootedRelation):
         """
             returns all the possible moves applied to a submitted configuration
             a configuration is made of a tuple (alice, bob), alice and bob 
-            being 2 different possible states: 'i' or 'c'
+            being 2 different possible states: 'i' or 'w' or 'c'
+            @config: submitted configuration
         """
         actions = [] # all possible moves
         next_alice = None
@@ -51,6 +57,8 @@ class AliceBobAdvanced(RootedRelation):
     def execute(self, config, action):
         """
             executes the move 'action' on config
+            @config: configuration where to apply the action
+            @action: action to apply to the configuration. Made of a tuple (alice, bob)
         """
         return action
 
@@ -84,6 +92,9 @@ class AliceBobAdvanced(RootedRelation):
 
 
 def main():
+    """"
+        Solves the alice&bobo automate, searchs for invalid cases and deadlocks
+    """
     print("------- Alice & Bob -------")
 
     # Initialisation de l'automate avec AliceBobConfig
