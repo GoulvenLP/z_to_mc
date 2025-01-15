@@ -10,8 +10,6 @@ class ParentTracer(RootedGraph):
         for move in moves:
             if move not in self.parents:
                 self.parents[move] = [v]
-            #elif self.parents[move] == []:
-            #    self.parents[move] = [v]
         return moves
 
     def roots(self):

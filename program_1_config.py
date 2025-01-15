@@ -8,10 +8,12 @@ class Program1Config:
         self.pc = 1
         self.x = 0
 
-    def __hash__(self):
-        return hash(tuple(self.pc, self.x))
+    def __repr__(self):
+        return "pc: " + str(self.pc) + ", x: " + str(self.x)
     
-
+    def __hash__(self):
+        return hash((self.pc, self.x))
+    
     def __eq__(self, comparative):
         """
             Compares an object to the current one.
@@ -39,10 +41,3 @@ def program1():
     p2 = Piece("p2", lambda config : config.pc == 2, ap1)
 
     return Soup(Program1Config(), [p1, p2])
-
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    main()
