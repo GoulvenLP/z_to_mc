@@ -13,6 +13,7 @@ class Program1Config:
     def __eq__(self, comparative):
         """
             Compares an object to the current one.
+            @comparative: the object to compare to the self one
             @return True if both objects are equal, else false
         """
         if (isinstance(comparative, Program1Config) and \
