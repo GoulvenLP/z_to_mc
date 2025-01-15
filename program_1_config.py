@@ -5,7 +5,6 @@ class Program1Config:
         self.pc = 1
         self.x = 0
 
-    
     def __hash__(self):
         return hash(tuple(self.pc, self.x))
     
@@ -20,3 +19,4 @@ class Program1Config:
                 return True
         return False
     
+
