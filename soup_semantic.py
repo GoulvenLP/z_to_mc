@@ -16,12 +16,13 @@ class SoupSemantic(RootedRelation):
         return self.program.start
     
     def actions(self, config):
-        return list(filter(lambda p: p.guard(config), self.program.pieces))
+        elements = list(filter(lambda p: p.guard(config), self.program.pieces))
+        return elements
 
     def execute(self, configuration, piece):
         target = deepcopy(configuration)
         _ = piece.behavior(target)
-        return [target]
+        return target 
 
 
 def main():
@@ -38,7 +39,7 @@ def main():
     is_deadlock = predicate_finder(graph, lambda state: len(soup_semantic.actions(state)) == 0)
     
     if is_deadlock:
-        print("[+] Solution trouvée !")
+        print("[+] Deadlock trouvée !")
 
 
         print("[+] Trace de la solution:")

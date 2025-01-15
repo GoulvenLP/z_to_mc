@@ -6,7 +6,7 @@ class RR2RG(RootedGraph):
         self.op = op
 
     def roots(self):
-        return [self.op.initial()]
+        return self.op.initial()
 
     def neighbors(self, c):
         """

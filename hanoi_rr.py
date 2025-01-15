@@ -14,9 +14,9 @@ class HanoiRR(RootedRelation):
         :param n_towers: Nombre de tours.
         :param ndisk: Nombre de disques.
         """
-        self.state = HanoiState(n_towers=n_towers, ndisk=ndisk)
-        self.state.initialiser()  # Crée l'état initial
-        self.rs = self.state  # L'état racine initial
+        self.initial_state = HanoiState(n_towers=n_towers, ndisk=ndisk)
+        self.initial_state.initialiser()  # Crée l'état initial
+        self.rs = [self.initial_state] # liste des etats initiaux (HanoiState)
 
     def initial(self):
         return self.rs

@@ -8,7 +8,7 @@ class Soup:
             @start: starting point
             @pieces: Piece object(s)
         """
-        self.start = start
+        self.start = [start]
         self.pieces = pieces
 
     def add_piece(self, piece):
