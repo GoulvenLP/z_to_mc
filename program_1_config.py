@@ -20,10 +20,9 @@ class Program1Config:
             @comparative: the object to compare to the self one
             @return True if both objects are equal, else false
         """
-        if (isinstance(comparative, Program1Config) and \
-            ((self.pc == comparative.pc) and (self.x == comparative.x))):
-                return True
-        return False
+        if (not isinstance(comparative, Program1Config)):
+            return False;
+        return (self.pc == comparative.pc) and (self.x == comparative.x)
     
 
 def program1():
