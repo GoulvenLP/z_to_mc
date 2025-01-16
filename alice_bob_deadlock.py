@@ -9,7 +9,7 @@ class AliceBobConfig(RootedRelation):
         Initialise l'état initial d'Alice et Bob.
         :param initial_state: tuple représentant l'état initial (Alice, Bob).
         """
-        self.tuple_alice_bob = initial_state
+        self.tuple_alice_bob = [initial_state] # une liste car l'architecture permet plusieurs états initiaux
 
     def initial(self):
         """

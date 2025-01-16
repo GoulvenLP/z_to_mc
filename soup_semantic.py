@@ -33,21 +33,20 @@ def main():
 
     graph = ParentTracer(RR2RG(soup_semantic))
 
-    print("[+] Recherche d'une solution...")
+    print("[+] Recherche d'un deadlock...")
 
-    # Utiliser predicate_finder pour trouver la solution
     is_deadlock = predicate_finder(graph, lambda state: len(soup_semantic.actions(state)) == 0)
     
     if is_deadlock:
         print("[+] Deadlock trouvée !")
 
 
-        print("[+] Trace de la solution:")
+        print("[+] Trace du deadlock:")
         trace = graph.getTrace(is_deadlock)
         for state in trace:
             print(state)
     else:
-        print("Aucune solution trouvée.")
+        print("Aucun deadlock trouvé.")
 
 
 if __name__ == '__main__':

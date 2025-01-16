@@ -33,10 +33,10 @@ def program1():
 
     p1 = Piece("p1", lambda config : config.pc == 1, ap1)
 
-    def ap1(config : Program1Config):
+    def ap2(config : Program1Config):
         config.x += 3
         config.pc +=1
 
-    p2 = Piece("p2", lambda config : config.pc == 2, ap1)
+    p2 = Piece("p2", lambda config : config.pc == 2, ap2)
 
     return Soup(Program1Config(), [p1, p2])

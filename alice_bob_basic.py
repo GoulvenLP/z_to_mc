@@ -10,9 +10,8 @@ class AliceBobBasic(RootedRelation):
             @alice: initial state of alice
             @bobo: initial state of bob
         """
-        self.tuple_alice_bob = (alice, bob)
+        self.tuple_alice_bob = [(alice, bob)]  # une liste car l'architecture permet plusieurs états initiaux
     
-
     def initial(self):
         """
             Initial state of the automate

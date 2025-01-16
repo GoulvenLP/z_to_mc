@@ -9,8 +9,8 @@ def predicate_finder(graph: RootedGraph, predicate):
     :param predicate: La condition à résoudre.
     :return: L'état final trouvé, est 'None' si aucun cas correspondant au prédicat n'est trouvé
     """
-    queue = deque([(state) for state in graph.roots()])
-
+    #queue = deque([(state) for state in graph.roots()])
+    queue = deque(graph.roots())    
     
     visited = set()
 
