@@ -33,7 +33,6 @@ def main():
     for program in programs:
         if (i == 0):
             print("\n------- Program 1  -------")
-            print("\n------- Program 1  -------")
         elif (i == 1):
             print("------- Program Alice and Bob basic  -------")
         elif (i == 2):
