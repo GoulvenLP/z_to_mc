@@ -40,8 +40,6 @@ def main():
     
     if is_deadlock:
         print("[+] Deadlock trouvée !")
-
-
         print("[+] Trace du deadlock:")
         trace = graph.getTrace(is_deadlock)
         for state in trace:
@@ -62,8 +60,6 @@ def main():
     
     if is_deadlock:
         print("[+] Deadlock trouvée !")
-
-
         print("[+] Trace du deadlock:")
         trace = graph.getTrace(is_deadlock)
         for state in trace:
