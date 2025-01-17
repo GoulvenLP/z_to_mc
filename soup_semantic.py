@@ -26,96 +26,50 @@ class SoupSemantic(RootedRelation):
         return target 
 
 
+
 def main():
-    print("------- Program 1  -------")
+    i = 0
+    programs = [program1(), alice_and_bob_basic(), alice_and_bob_deadlock()]
+    for program in programs:
+        if (i == 0):
+            print("------- Program 1  -------")
+        elif (i == 1):
+            print("------- Program 2  -------")
+        elif (i == 2):
+            print("------- Program 3  -------")
+        i += 1
+        program = alice_and_bob_deadlock()
+        soup_semantic = SoupSemantic(program)
 
-    program = program1()
-    soup_semantic = SoupSemantic(program)
+        graph = ParentTracer(RR2RG(soup_semantic))
 
-    graph = ParentTracer(RR2RG(soup_semantic))
+        print("[+] Recherche d'un deadlock...")
 
-    print("[+] Recherche d'un deadlock...")
+        is_deadlock = predicate_finder(graph, lambda state: len(soup_semantic.actions(state)) == 0)
+        
+        if is_deadlock:
+            print("[+] Deadlock trouvé !")
+            print("[+] Trace du deadlock:")
+            trace = graph.getTrace(is_deadlock)
+            for state in trace:
+                print(state)
+        else:
+            print("Aucun deadlock trouvé.")
 
-    is_deadlock = predicate_finder(graph, lambda state: len(soup_semantic.actions(state)) == 0)
-    
-    if is_deadlock:
-        print("[+] Deadlock trouvée !")
-        print("[+] Trace du deadlock:")
-        trace = graph.getTrace(is_deadlock)
-        for state in trace:
-            print(state)
-    else:
-        print("Aucun deadlock trouvé.")
+        print("[+] Recherche du cas (c,c)...")
 
-    print("\n\n------- Alice&Bob (basic) -------")
-
-    program = alice_and_bob_basic()
-    soup_semantic = SoupSemantic(program)
-
-    graph = ParentTracer(RR2RG(soup_semantic))
-
-    print("[+] Recherche d'un deadlock...")
-
-    is_deadlock = predicate_finder(graph, lambda state: len(soup_semantic.actions(state)) == 0)
-    
-    if is_deadlock:
-        print("[+] Deadlock trouvée !")
-        print("[+] Trace du deadlock:")
-        trace = graph.getTrace(is_deadlock)
-        for state in trace:
-            print(state)
-    else:
-        print("Aucun deadlock trouvé.")
-
-    print("[+] Recherche du cas (c,c)...")
-
-    forbiden_state = predicate_finder(graph, lambda state: state == AliceBobConfig('c', 'c'))
-    
-    if forbiden_state:
-        print("[+] état interdit trouvée !")
+        forbiden_state = predicate_finder(graph, lambda state: state == AliceBobConfig('c', 'c'))
+        
+        if forbiden_state:
+            print("[+] état interdit trouvé !")
 
 
-        print("[+] Trace :")
-        trace = graph.getTrace(forbiden_state)
-        for state in trace:
-            print(state)
-    else:
-        print("Aucun forbidden state trouvé.")
-
-    print("\n\n------- Alice&Bob (deadlock avec w) -------")
-
-    program = alice_and_bob_deadlock()
-    soup_semantic = SoupSemantic(program)
-
-    graph = ParentTracer(RR2RG(soup_semantic))
-
-    print("[+] Recherche d'un deadlock...")
-
-    is_deadlock = predicate_finder(graph, lambda state: len(soup_semantic.actions(state)) == 0)
-    
-    if is_deadlock:
-        print("[+] Deadlock trouvée !")
-        print("[+] Trace du deadlock:")
-        trace = graph.getTrace(is_deadlock)
-        for state in trace:
-            print(state)
-    else:
-        print("Aucun deadlock trouvé.")
-
-    print("[+] Recherche du cas (c,c)...")
-
-    forbiden_state = predicate_finder(graph, lambda state: state == AliceBobConfig('c', 'c'))
-    
-    if forbiden_state:
-        print("[+] état interdit trouvée !")
-
-
-        print("[+] Trace :")
-        trace = graph.getTrace(forbiden_state)
-        for state in trace:
-            print(state)
-    else:
-        print("Aucun forbidden state trouvé.")
+            print("[+] Trace :")
+            trace = graph.getTrace(forbiden_state)
+            for state in trace:
+                print(state)
+        else:
+            print("Aucun état interdit trouvé.")
 
 
 
