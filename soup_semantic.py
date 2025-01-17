@@ -5,7 +5,7 @@ from program_1_config import program1
 from rr2rg import RR2RG
 from predicate_finder import predicate_finder
 from parent_tracer import ParentTracer
-from alice_bob_config import alice_and_bob_basic, alice_and_bob_deadlock, AliceBobConfig
+from alice_bob_config import alice_and_bob_basic, alice_and_bob_deadlock, alice_and_bob_advanced, AliceBobConfig
 
 class SoupSemantic(RootedRelation):
 
@@ -29,14 +29,16 @@ class SoupSemantic(RootedRelation):
 
 def main():
     i = 0
-    programs = [program1(), alice_and_bob_basic(), alice_and_bob_deadlock()]
+    programs = [program1(), alice_and_bob_basic(), alice_and_bob_deadlock(), alice_and_bob_advanced()]
     for program in programs:
         if (i == 0):
             print("------- Program 1  -------")
         elif (i == 1):
-            print("------- Program 2  -------")
+            print("------- Program Alice and Bob basic  -------")
         elif (i == 2):
-            print("------- Program 3  -------")
+            print("------- Alice and Bob deadlock  -------")
+        elif (i == 3):
+            print("------- Alice and Bob Advanced -------")
         i += 1
         program = alice_and_bob_deadlock()
         soup_semantic = SoupSemantic(program)

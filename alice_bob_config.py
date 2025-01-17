@@ -79,3 +79,35 @@ def alice_and_bob_deadlock():
     p6 = Piece("Bob i", lambda config : config.state_bob == 'c', bob_state_i)
 
     return Soup(AliceBobConfig(), [p1, p2, p3, p4, p5, p6])
+
+
+def alice_and_bob_advanced():
+    def alice_state_i(config : AliceBobConfig):
+        config.state_alice = 'i'
+
+    def alice_state_w(config : AliceBobConfig):
+        config.state_alice = 'w'
+
+    def alice_state_c(config : AliceBobConfig):
+        config.state_alice = 'c'
+
+    def bob_state_i(config : AliceBobConfig):
+        config.state_bob = 'i'
+
+    def bob_state_c(config : AliceBobConfig):
+        config.state_bob = 'c'
+
+    def bob_state_w(config : AliceBobConfig):
+        config.state_bob = 'w'
+
+    p1 = Piece("Alice w", lambda config : config.state_alice == 'i', alice_state_w)
+    p2 = Piece("Alice c", lambda config : config.state_alice == 'w', alice_state_c)
+
+    p3 = Piece("Bob w", lambda config : config.state_bob == 'i', bob_state_w)
+    p4 = Piece("Bob i", lambda config : config.state_bob == 'w' and config.state_alice == 'c', bob_state_i)
+    p5 = Piece("Bob c", lambda config : config.state_bob == 'w' and config.state_alice != 'c', bob_state_c)
+
+    p6 = Piece("Alice i", lambda config : config.state_alice == 'c', alice_state_i)
+    p7 = Piece("Bob i", lambda config : config.state_bob == 'c', bob_state_i)
+
+    return Soup(AliceBobConfig(), [p1, p2, p3, p4, p5, p6, p7])
