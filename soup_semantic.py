@@ -32,11 +32,11 @@ def main():
     programs = [program1(), alice_and_bob_basic(), alice_and_bob_deadlock()]
     for program in programs:
         if (i == 0):
-            print("------- Program 1  -------")
+            print("\n------- Program 1  -------")
         elif (i == 1):
-            print("------- Program 2  -------")
+            print("\n------- Alice&Bob basic  -------")
         elif (i == 2):
-            print("------- Program 3  -------")
+            print("\n------- Alice&Bob (state w)  -------")
         i += 1
         program = alice_and_bob_deadlock()
         soup_semantic = SoupSemantic(program)

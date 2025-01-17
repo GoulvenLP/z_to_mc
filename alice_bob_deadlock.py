@@ -33,7 +33,7 @@ class AliceBobConfig(RootedRelation):
         elif current_alice == 'w' and current_bob == 'i': 
             actions.append(('c', current_bob))
         elif current_alice == 'c':
-            actions.append(('i', current_bob))  # Alice retourne à 'i'
+            actions.append(('i', current_bob)) 
 
         # Actions pour Bob
         if current_bob == 'i':
