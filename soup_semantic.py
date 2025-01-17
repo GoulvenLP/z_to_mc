@@ -32,7 +32,7 @@ def main():
     programs = [program1(), alice_and_bob_basic(), alice_and_bob_deadlock(), alice_and_bob_advanced()]
     for program in programs:
         if (i == 0):
-            print("------- Program 1  -------")
+            print("\n------- Program 1  -------")
         elif (i == 1):
             print("------- Program Alice and Bob basic  -------")
         elif (i == 2):

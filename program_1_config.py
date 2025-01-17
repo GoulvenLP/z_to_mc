@@ -40,3 +40,5 @@ def program1():
     p2 = Piece("p2", lambda config : config.pc == 2, ap2)
 
     return Soup(Program1Config(), [p1, p2])
+
+
