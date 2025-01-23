@@ -101,13 +101,12 @@ def alice_and_bob_advanced():
         config.state_bob = 'w'
 
     p1 = Piece("Alice w", lambda config : config.state_alice == 'i', alice_state_w)
-    p2 = Piece("Alice c", lambda config : config.state_alice == 'w', alice_state_c)
+    p2 = Piece("Alice i", lambda config : config.state_alice == 'c', alice_state_i)
+    p3 = Piece("Alice c", lambda config : config.state_alice == 'w' and config.state_bob != 'c', alice_state_c)
 
-    p3 = Piece("Bob w", lambda config : config.state_bob == 'i', bob_state_w)
-    p4 = Piece("Bob i", lambda config : config.state_bob == 'w' and config.state_alice == 'c', bob_state_i)
-    p5 = Piece("Bob c", lambda config : config.state_bob == 'w' and config.state_alice != 'c', bob_state_c)
-
-    p6 = Piece("Alice i", lambda config : config.state_alice == 'c', alice_state_i)
+    p4 = Piece("Bob w", lambda config : config.state_bob == 'i', bob_state_w)
+    p5 = Piece("Bob i", lambda config : config.state_bob == 'w' and config.state_alice == 'w', bob_state_i)
+    p6 = Piece("Bob c", lambda config : config.state_bob == 'w' and config.state_alice != 'c', bob_state_c)
     p7 = Piece("Bob i", lambda config : config.state_bob == 'c', bob_state_i)
 
     return Soup(AliceBobConfig(), [p1, p2, p3, p4, p5, p6, p7])

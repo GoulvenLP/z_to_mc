@@ -30,25 +30,27 @@ class AliceBobAdvanced(RootedRelation):
         actions = [] # all possible moves
         next_alice = None
         next_bob = None
+        current_alice, current_bob = config
+
         # possible moves on alice
-        if (config[0] == 'i'):
+        if (current_alice == 'i'):
             next_alice = 'w'
-        elif (config[0] == 'w' and config[1] == 'i'):
+        elif (current_alice == 'w' and current_bob != 'c'):
             next_alice  = 'c'
-        elif (config[0] == 'c'):
+        elif (current_alice == 'c'):
             next_alice = 'i'
-        actions.append((next_alice, config[1])) # config[1] = current bob
+        actions.append((next_alice, current_bob)) # config[1] = current bob
         
         #possible moves on bob
-        if (config[1] == 'i'):
+        if (current_bob == 'i'):
             next_bob = 'w'
-        elif (config[1] == 'w' and config[0] == 'i'):
+        elif (current_bob == 'w' and current_alice == 'i'):
             next_bob = 'c'
-        elif (config[1] == 'w' and config[0] != 'i'):
+        elif (current_bob == 'w' and current_alice == 'w'):
             next_bob = 'i'
-        elif (config[1] == 'c'):
+        elif (current_bob == 'c'):
             next_bob = 'i'
-        actions.append((config[0], next_bob)) #config[0] = current alice
+        actions.append((current_alice, next_bob)) #config[0] = current alice
         
         return actions
     

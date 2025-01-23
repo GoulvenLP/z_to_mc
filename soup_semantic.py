@@ -35,13 +35,13 @@ def main():
         if (i == 0):
             print("\n------- Program 1  -------")
         elif (i == 1):
-            print("------- Program Alice and Bob basic  -------")
+            print("\n------- Program Alice and Bob basic  -------")
         elif (i == 2):
-            print("------- Alice and Bob deadlock  -------")
+            print("\n------- Alice and Bob deadlock  -------")
         elif (i == 3):
-            print("------- Alice and Bob Advanced -------")
+            print("\n------- Alice and Bob Advanced -------")
         i += 1
-        program = alice_and_bob_deadlock()
+        #program = alice_and_bob_deadlock()
         soup_semantic = SoupSemantic(program)
 
         graph = ParentTracer(RR2RG(soup_semantic))
@@ -77,7 +77,7 @@ def main():
 
 
 
-    def main2():
+"""     def main2():
         systeme = nbits(5)
         proprietes, accept = nbits.3even()
         ss = SoupSemantic(systeme)
@@ -85,7 +85,7 @@ def main():
         s_inter = StepSemanticsIntersection(ss, sp)
         rr2rg = RR2RG(s_inter)
         parent_tracer = ParentTracer(rr2rg)
-        solution = predicate_finder(parent_tracer, lambda config: accept(config[1]))    #config[1] == right_config
+        solution = predicate_finder(parent_tracer, lambda config: accept(config[1]))    #config[1] == right_config """
 
 if __name__ == '__main__':
     main()
