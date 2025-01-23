@@ -5,5 +5,3 @@ class Piece:
         self.guard = guard
         self.behavior = behavior
 
-
-    

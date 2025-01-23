@@ -1,13 +1,14 @@
 from rooted_relation import RootedRelation
 from copy import deepcopy
 from soup import Soup
-from program_1_config import program1
+from program_1_config import program1, program1_parity_check
 from rr2rg import RR2RG
 from predicate_finder import predicate_finder
 from parent_tracer import ParentTracer
 from alice_bob_config import alice_and_bob_basic, alice_and_bob_deadlock, alice_and_bob_advanced, AliceBobConfig
 from step_semantics_intersection import StepSemanticsIntersection
-from n_bits_config import nbits_3even
+from n_bits_config import nbits_3even, nbit
+from soup_dependent_semantic import SoupDependantSemantics
 
 class SoupSemantic(RootedRelation):
 
@@ -79,17 +80,26 @@ def main():
 
 
 def main2():
-    systeme = nbits_3even(5)
-    proprietes, accept = nbits.3even()
+    """     systeme = nbit()
+    proprietes, accept = nbits_3even()
     ss = SoupSemantic(systeme)
     sp = SoupDependantSemantics(proprietes)
     s_inter = StepSemanticsIntersection(ss, sp)
     rr2rg = RR2RG(s_inter)
     parent_tracer = ParentTracer(rr2rg)
-    solution = predicate_finder(parent_tracer, lambda config: accept(config[1]))    #config[1] == right_config 
+    solution = predicate_finder(parent_tracer, lambda config: accept(config[1])) """
 
+    systeme = program1()
+    proprietes, accept = program1_parity_check()
+    
+    ss = SoupSemantic(systeme)
+    sp = SoupDependantSemantics(proprietes)
+    s_inter = StepSemanticsIntersection(ss, sp)
+    rr2rg = RR2RG(s_inter)
+    parent_tracer = ParentTracer(rr2rg)
+    solution = predicate_finder(parent_tracer, lambda config: accept(config[1]))
 
 
 
 if __name__ == '__main__':
-    main2()
+    main()

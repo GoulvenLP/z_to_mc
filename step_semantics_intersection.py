@@ -1,3 +1,5 @@
+from stutter import Stutter
+
 class StepSemanticsIntersection:
 
     def __init__(self, lhs, rhs):
@@ -8,7 +10,7 @@ class StepSemanticsIntersection:
     def initial(self):
         cs = []
         for lc in self.lhs.initial():
-            for rc in self.rhs.initial:
+            for rc in self.rhs.initial():
                 cs.append((lc, rc))
         return cs
 
@@ -34,8 +36,17 @@ class StepSemanticsIntersection:
                 right_actions = self.rhs.actions(left_step, right_config)
                 synchronous_actions.extends(map(lambda right_action : (left_step, right_action), right_actions))
         if n_actions == 0:
-            left_step = (left_config, stutter(), left_config)
+            left_step = (left_config, Stutter(), left_config)
             right_actions = self.rhs.actions(left_step, right_config)
             synchronous_actions.extends(map(lambda right_action: (left_step, right_action), right_actions))
         return synchronous_actions
 
+    def execute(self, config, action):
+        # action c'est list[tuple[tuple[SoupConfiguration, Piece, SoupConfiguration], Piece]]
+        lhs_step, rhs_action = action
+        # source c'est tuple[SoupConfiguration, SoupConfiguration]
+        lhs_source, rhs_source = config
+        # lhs_step et rhs_source, on peut appeler ça contexte d'exécution ou contexte d'évaluation
+        # on les retrouve côte-à-côte dans la création de rhs_actions dans "self.actions"
+        rhs_targets = self.rhs.execute(rhs_action, lhs_step, rhs_source)
+        return map(lambda rhs_target: (lhs_step[2], rhs_target), rhs_targets)

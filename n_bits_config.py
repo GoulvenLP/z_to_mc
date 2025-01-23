@@ -4,11 +4,15 @@ from piece import Piece
 
 class NBitsConfig:
     def __init__(self):
-        self.bits = 0
+        # valeur initial des bits (1101)
+        self.bits = 1101
         self.pc = 0  # Ajout d'un compteur pour suivre les étapes (utilisé dans nbits_3even)
 
     def __hash__(self):
         return hash(self.bits)
+
+    def __repr__(self):
+        return f"bits: {self.bits}"
 
     def __eq__(self, other):
         """
@@ -18,16 +22,33 @@ class NBitsConfig:
             return False
         return other.bits == self.bits
 
-    def create_n_bits_soup(self, n):
-        soup = Soup(NBitsConfig())
+"""     def create_n_bits_soup(self, n):
+        soup = Soup(NBitsConfig(), [])
         def flip(x):  # Fonction qui crée un comportement pour chaque bit
             def behaviour(c):
                 c.bits = c.bits ^ (1 << x)  # Inverse le bit `x` de `c.bits`
             return behaviour
 
         for i in range(n):
-            soup.add(Piece(f"flip({i})", lambda c: True, flip(i)))
-        return soup
+            soup.add_piece(Piece(f"flip({i})", lambda c: True, flip(i)))
+        return soup """
+
+
+
+
+# ############################################################################################################
+# NOT WORKING, AND DONT KNOW WHY
+# THE BEHAVIOR FUNCTION IS NOT RECORGANIZED IN THE PIECE OBJECT
+# ############################################################################################################
+def nbit():
+
+    def flip(config : NBitsConfig):
+        config.bits = config.bits ^ 1
+    
+    p1 = Piece("flip", lambda config : True, flip)
+    soup = Soup(NBitsConfig(), [p1])
+    return soup
+
 
 
 def nbits_3even():
@@ -56,9 +77,7 @@ def nbits_3even():
         p2a
     )
 
-    configP1 = NBitsConfig()  # Configuration initiale pour l'automate de propriété
-    soup = Soup(configP1)
-    soup.add(p1)
-    soup.add(p2)
+    soup = Soup(NBitsConfig(), [p1, p2])  # création de la soupe oh miam 
 
     return soup, lambda config: config.pc == 3  # La propriété est satisfaite si `pc == 3`
+
