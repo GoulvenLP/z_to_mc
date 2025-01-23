@@ -1,6 +1,6 @@
 class StepSemanticsIntersection:
 
-    def init(self, lhs, rhs):
+    def __init__(self, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
 

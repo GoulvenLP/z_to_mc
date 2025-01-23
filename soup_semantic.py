@@ -7,6 +7,7 @@ from predicate_finder import predicate_finder
 from parent_tracer import ParentTracer
 from alice_bob_config import alice_and_bob_basic, alice_and_bob_deadlock, alice_and_bob_advanced, AliceBobConfig
 from step_semantics_intersection import StepSemanticsIntersection
+from n_bits_config import nbits_3even
 
 class SoupSemantic(RootedRelation):
 
@@ -41,7 +42,7 @@ def main():
         elif (i == 3):
             print("\n------- Alice and Bob Advanced -------")
         i += 1
-        #program = alice_and_bob_deadlock()
+
         soup_semantic = SoupSemantic(program)
 
         graph = ParentTracer(RR2RG(soup_semantic))
@@ -77,15 +78,18 @@ def main():
 
 
 
-"""     def main2():
-        systeme = nbits(5)
-        proprietes, accept = nbits.3even()
-        ss = SoupSemantic(systeme)
-        sp = SoupDependantSemantics(proprietes)
-        s_inter = StepSemanticsIntersection(ss, sp)
-        rr2rg = RR2RG(s_inter)
-        parent_tracer = ParentTracer(rr2rg)
-        solution = predicate_finder(parent_tracer, lambda config: accept(config[1]))    #config[1] == right_config """
+def main2():
+    systeme = nbits_3even(5)
+    proprietes, accept = nbits.3even()
+    ss = SoupSemantic(systeme)
+    sp = SoupDependantSemantics(proprietes)
+    s_inter = StepSemanticsIntersection(ss, sp)
+    rr2rg = RR2RG(s_inter)
+    parent_tracer = ParentTracer(rr2rg)
+    solution = predicate_finder(parent_tracer, lambda config: accept(config[1]))    #config[1] == right_config 
+
+
+
 
 if __name__ == '__main__':
-    main()
+    main2()

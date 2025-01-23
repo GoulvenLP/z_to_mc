@@ -3,55 +3,62 @@ from piece import Piece
 
 
 class NBitsConfig:
-
     def __init__(self):
         self.bits = 0
-
+        self.pc = 0  # Ajout d'un compteur pour suivre les étapes (utilisé dans nbits_3even)
 
     def __hash__(self):
         return hash(self.bits)
-    
 
-    def __eq__(self, object):
+    def __eq__(self, other):
         """
-            Verifies the equivalence between two objects, based on
-            the value of the 'bits' variable
+        Vérifie l'équivalence entre deux objets, basée sur la valeur de 'bits'.
         """
-        if not isinstance(object, NBitsConfig):
+        if not isinstance(other, NBitsConfig):
             return False
-        return object.bits == self.bits
-    
+        return other.bits == self.bits
 
     def create_n_bits_soup(self, n):
         soup = Soup(NBitsConfig())
-        def flip(x): # function that creates another function!
+        def flip(x):  # Fonction qui crée un comportement pour chaque bit
             def behaviour(c):
-                c.bits = c.bits^(1 << x)
+                c.bits = c.bits ^ (1 << x)  # Inverse le bit `x` de `c.bits`
             return behaviour
+
         for i in range(n):
-            soup.add(Piece(f"flip({i})"), lambda c: True, flip(i))
+            soup.add(Piece(f"flip({i})", lambda c: True, flip(i)))
         return soup
 
 
-
-# TODO VERIFY IF THIS WORKS... #gros chantier
 def nbits_3even():
-    def p1a(input, config):
-        source, action, target = i
-        config.pc += 1
+    """
+    Automate de propriété qui vérifie que le bit actuel est pair.
+    """
 
-    p1 = Piece("even": lambda step: 
-               source, action, target = step
-               return (source % 2 == 0, p1a)    #input = (source, action, target)
+    # Pièce qui vérifie si le nombre est pair
+    def p1a(step, config : NBitsConfig):
+        source, action, target = step
+        config.pc += 1  # Incrémenter le compteur si la transition est validée
+
+    p1 = Piece(
+        "even",
+        lambda step: step[0].bits % 2 == 0,  # Vérifie si `bits` est pair
+        p1a
     )
 
-
-    def p2a(step, config):
+    # Pièce qui vérifie si le nombre n'est pas pair
+    def p2a(step, config : NBitsConfig):
         source, action, target = step
 
-    p2 = Piece("Not even", lambda config:
-               source, action, target = step
-               return (source % 2 != 0, p2a)
-               )
-    soup = Soup(configP1, [p1, P2])       #configP1: class that contains
-    return (soup, lambda config: config.pc == 3)
+    p2 = Piece(
+        "not even",
+        lambda step: step[0].bits % 2 != 0,  # Vérifie si `bits` est impair
+        p2a
+    )
+
+    configP1 = NBitsConfig()  # Configuration initiale pour l'automate de propriété
+    soup = Soup(configP1)
+    soup.add(p1)
+    soup.add(p2)
+
+    return soup, lambda config: config.pc == 3  # La propriété est satisfaite si `pc == 3`
