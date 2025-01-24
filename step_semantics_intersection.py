@@ -45,4 +45,5 @@ class StepSemanticsIntersection:
         lhs_step, rhs_action = action
         lhs_source, rhs_source = config
         rhs_targets = self.rhs.execute(rhs_action, lhs_step, rhs_source)
-        return map(lambda rhs_target: (lhs_step[2], rhs_target), rhs_targets)
+        m = map(lambda rhs_target: (lhs_step[2], rhs_target), rhs_targets)
+        return m

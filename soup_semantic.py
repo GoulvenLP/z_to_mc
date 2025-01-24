@@ -84,7 +84,6 @@ def main():
 
 def main2():
 
-
     systeme = program1()
     proprietes, accept = program1_parity_check()
     
@@ -94,6 +93,7 @@ def main2():
     rr2rg = RR2RG(s_inter)
     parent_tracer = ParentTracer(rr2rg)
     solution = predicate_finder(parent_tracer, lambda config: accept(config[1]))
+
 
 
 

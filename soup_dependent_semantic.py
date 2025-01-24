@@ -18,4 +18,4 @@ class SoupDependantSemantics(RootedDependentRelation):
     def execute(self, piece, input, config):
         target = deepcopy(config)
         _ = piece.behavior(input, target)
-        return target
+        return [target]
