@@ -26,7 +26,7 @@ class StepSemanticsIntersection:
         
         # first: assemble the left step
         for left_action in left_actions:
-            left_targets = self.lhs.execute(left_action, left_config)
+            left_targets = self.lhs.execute(left_config, left_action)
             if len(left_targets) == 0: # an action was not successful: leads to nothing
                 n_actions -= 1
             for left_target in left_targets:
@@ -34,7 +34,7 @@ class StepSemanticsIntersection:
                 
                 # work on the right side now to assemble the right step
                 right_actions = self.rhs.actions(left_step, right_config)
-                synchronous_actions.extends(map(lambda right_action : (left_step, right_action), right_actions))
+                synchronous_actions.extend(map(lambda right_action : (left_step, right_action), right_actions))
         if n_actions == 0:
             left_step = (left_config, Stutter(), left_config)
             right_actions = self.rhs.actions(left_step, right_config)
@@ -42,11 +42,7 @@ class StepSemanticsIntersection:
         return synchronous_actions
 
     def execute(self, config, action):
-        # action c'est list[tuple[tuple[SoupConfiguration, Piece, SoupConfiguration], Piece]]
         lhs_step, rhs_action = action
-        # source c'est tuple[SoupConfiguration, SoupConfiguration]
         lhs_source, rhs_source = config
-        # lhs_step et rhs_source, on peut appeler ça contexte d'exécution ou contexte d'évaluation
-        # on les retrouve côte-à-côte dans la création de rhs_actions dans "self.actions"
         rhs_targets = self.rhs.execute(rhs_action, lhs_step, rhs_source)
         return map(lambda rhs_target: (lhs_step[2], rhs_target), rhs_targets)

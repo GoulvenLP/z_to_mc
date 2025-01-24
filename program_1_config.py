@@ -48,14 +48,14 @@ def program1_parity_check():
     """
     The propriety is verified if the parity count is equal to 3
     """
-    def even(config : Program1Config):
+    def even(step, config : Program1Config):
         config.parity_count += 1
 
-    p1 = Piece("p1", lambda config: config.pc % 2 == 0, even)
+    p1 = Piece("p1", lambda step, config: step[0].pc % 2 == 0, even)
 
-    def odd(config : Program1Config):
+    def odd(step, config : Program1Config):
         pass
 
-    p2 = Piece("p2", lambda config : config.pc % 2 != 0, odd)
+    p2 = Piece("p2", lambda step, config: step[0].pc != 0, odd)
 
     return Soup(Program1Config(), [p1, p2]), lambda config: config.parity_count == 3

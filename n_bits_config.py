@@ -35,11 +35,6 @@ class NBitsConfig:
 
 
 
-
-# ############################################################################################################
-# NOT WORKING, AND DONT KNOW WHY
-# THE BEHAVIOR FUNCTION IS NOT RECORGANIZED IN THE PIECE OBJECT
-# ############################################################################################################
 def nbit():
 
     def flip(config : NBitsConfig):

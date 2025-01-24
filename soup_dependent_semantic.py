@@ -10,7 +10,10 @@ class SoupDependantSemantics(RootedDependentRelation):
         return self.program.start
 
     def actions(self, input, config):
-        return list(filter(lambda p: p.guard(input, config), self.program.pieces))
+        def guard(piece):
+            a = piece.guard(input, config)
+            return a
+        return list(filter(guard, self.program.pieces))
 
     def execute(self, piece, input, config):
         target = deepcopy(config)

@@ -9,6 +9,7 @@ from alice_bob_config import alice_and_bob_basic, alice_and_bob_deadlock, alice_
 from step_semantics_intersection import StepSemanticsIntersection
 from n_bits_config import nbits_3even, nbit
 from soup_dependent_semantic import SoupDependantSemantics
+from piece import Piece
 
 class SoupSemantic(RootedRelation):
 
@@ -24,9 +25,11 @@ class SoupSemantic(RootedRelation):
         return elements
 
     def execute(self, configuration, piece):
+        print(type(piece))
+        print(type(configuration))
         target = deepcopy(configuration)
         _ = piece.behavior(target)
-        return target 
+        return [target] 
 
 
 
@@ -80,14 +83,7 @@ def main():
 
 
 def main2():
-    """     systeme = nbit()
-    proprietes, accept = nbits_3even()
-    ss = SoupSemantic(systeme)
-    sp = SoupDependantSemantics(proprietes)
-    s_inter = StepSemanticsIntersection(ss, sp)
-    rr2rg = RR2RG(s_inter)
-    parent_tracer = ParentTracer(rr2rg)
-    solution = predicate_finder(parent_tracer, lambda config: accept(config[1])) """
+
 
     systeme = program1()
     proprietes, accept = program1_parity_check()
@@ -102,4 +98,4 @@ def main2():
 
 
 if __name__ == '__main__':
-    main()
+    main2()
