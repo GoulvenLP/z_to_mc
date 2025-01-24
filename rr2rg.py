@@ -1,3 +1,4 @@
+from functools import reduce
 from rooted_graph import RootedGraph
 from rooted_relation import RootedRelation
 
@@ -18,6 +19,11 @@ class RR2RG(RootedGraph):
         actions = self.op.actions(c)
         # Exécuter chaque action pour obtenir les états voisins
         neighbors = [self.op.execute(c, action) for action in actions]
+        def mylambda(x, xs):
+            xs.extend(x)
+            return xs
+
+        neighbors = reduce(mylambda, neighbors, [])
         return neighbors
 
 

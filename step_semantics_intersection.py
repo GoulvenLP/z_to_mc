@@ -36,9 +36,9 @@ class StepSemanticsIntersection:
                 right_actions = self.rhs.actions(left_step, right_config)
                 synchronous_actions.extend(map(lambda right_action : (left_step, right_action), right_actions))
         if n_actions == 0:
-            left_step = (left_config, Stutter(), left_config)
+            left_step = (left_config, Stutter(self.lhs, self.rhs), left_config)
             right_actions = self.rhs.actions(left_step, right_config)
-            synchronous_actions.extends(map(lambda right_action: (left_step, right_action), right_actions))
+            synchronous_actions.extend(map(lambda right_action: (left_step, right_action), right_actions))
         return synchronous_actions
 
     def execute(self, config, action):
@@ -46,4 +46,4 @@ class StepSemanticsIntersection:
         lhs_source, rhs_source = config
         rhs_targets = self.rhs.execute(rhs_action, lhs_step, rhs_source)
         m = map(lambda rhs_target: (lhs_step[2], rhs_target), rhs_targets)
-        return m
+        return list(m)
