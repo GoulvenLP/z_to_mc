@@ -1,5 +1,6 @@
 from piece import Piece
 from soup import Soup
+from stutter import Stutter
 
 
 class AliceBobConfig:
@@ -7,8 +8,6 @@ class AliceBobConfig:
     def __init__(self, state_alice="i", state_bob="i"):
         self.state_alice = state_alice
         self.state_bob = state_bob
-
-        self.forbiden_state =False
 
     def __repr__(self):
         return "Alice: " + str(self.state_alice) + ", Bob: " + str(self.state_bob)
@@ -28,7 +27,7 @@ class AliceBobConfig:
             self.state_bob == comparative.state_bob
         )
 
-class ReachabilityConfig:
+class PropertyConfig:
     
     def __init__(self):
         self.state = "i"
@@ -45,7 +44,7 @@ class ReachabilityConfig:
             @comparative: the object to compare to the self one
             @return True if both objects are equal, else false
         """
-        if (not isinstance(comparative, ReachabilityConfig)):
+        if (not isinstance(comparative, PropertyConfig)):
             return False;
         return (self.state == comparative.state)
 
@@ -156,12 +155,23 @@ def alice_and_bob_advanced():
     return Soup(AliceBobConfig(), [p1, p2, p3, p4, p5, p6, p7])
 
 
-def reachability():
 
-    def init(step, config: ReachabilityConfig):
+
+# #########################
+# Properties automata     #
+# #########################
+def reachability():
+    """
+    Property: not(alice@c and bob@c)
+                                            
+    The automata have two state, the init state, and the final state.
+    If the automata to be verified reach the config (c,c), then the property automata goes to the 'w' state.    
+    """
+
+    def init(step, config: PropertyConfig):
         config.state = "i"
 
-    def fordiden_state(step, config: ReachabilityConfig):
+    def accept_state(step, config: PropertyConfig):
         config.state = "w"
         
 
@@ -176,10 +186,83 @@ def reachability():
     p2 = Piece(
         "alice@c and bob@c",
         lambda step,config: step[0].state_alice == "c" and step[0].state_bob == "c",
-        fordiden_state,
+        accept_state,
     )
 
     return (
-        Soup(ReachabilityConfig(), [p1, p2]),
+        Soup(PropertyConfig(), [p1, p2]),
         lambda config: config.state == "w",
     )
+
+def deadlock():
+
+    """
+    Property: not(deadlock)
+
+    """
+
+    def init(step, config: PropertyConfig):
+        config.state = "i"
+
+    def deadlock_state(step, config: PropertyConfig):
+        print("Deadlock state")
+        config.state = "w"
+
+    p1 = Piece(
+        "not(deadlock)",
+        lambda step,config: len(step[0].state_alice) != 0 or len(step[0].state_bob) != 0,
+        init,
+    )
+
+    p2 = Piece(
+        "deadlock",
+        lambda step,config: isinstance(step[1],Stutter),
+        deadlock_state,
+    )
+
+    return (
+        Soup(PropertyConfig(), [p1, p2]),
+        lambda config: config.state == "w",
+    )
+
+def vivacity():
+    """
+    Property: alice@c or bob@c
+    """
+
+    def init(step, config: PropertyConfig):
+        config.state = "x"
+
+    def accept_state(step, config: PropertyConfig):
+        config.state = "y"
+
+    p1 = Piece(
+        "x---q--->x",
+        lambda step,config: config.state == "x" and step[0].state_alice == "c" or step[0].state_bob == "c",
+        init,
+    )
+
+    p2 = Piece(
+        "x---!q--->x",
+        lambda step,config: config.state == "x" and not(step[0].state_alice == "c" or step[0].state_bob == "c"),
+        init,
+    )
+
+    p3 = Piece(
+        "x---!q--->y",
+        lambda step,config: config.state == "x" and not(step[0].state_alice == "c" or step[0].state_bob == "c"),
+        accept_state,
+    )
+
+    p4 = Piece(
+        "y---!q--->y",
+        lambda step,config: config.state == "y" and not(step[0].state_alice == "c" or step[0].state_bob == "c"),
+        accept_state,
+    )
+
+    return (
+        Soup(PropertyConfig(), [p1, p2, p3, p4]),
+        lambda config: config.state == "y",
+    )
+
+
