@@ -20,7 +20,8 @@ class SoupDependantSemantics(RootedDependentRelation):
     def actions(self, input, config):
         def guard(piece):
             return piece.guard(input, config)
-        return list(filter(guard, self.program.pieces))
+        possibles_actions = list(filter(guard, self.program.pieces))
+        return possibles_actions
 
     def execute(self, piece, input, config):
         target = deepcopy(config)

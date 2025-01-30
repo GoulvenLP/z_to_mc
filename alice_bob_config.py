@@ -30,7 +30,7 @@ class AliceBobConfig:
 class PropertyConfig:
     
     def __init__(self):
-        self.state = "i"
+        self.state = "x"
 
     def __repr__(self):
         return "state: " + str(self.state)
@@ -113,7 +113,7 @@ def alice_and_bob_deadlock():
 
 
 def alice_and_bob_advanced():
-    
+
     def alice_state_i(config: AliceBobConfig):
         config.state_alice = "i"
 
@@ -146,9 +146,10 @@ def alice_and_bob_advanced():
         lambda config: config.state_bob == "w" and config.state_alice == "w",
         bob_state_i,
     )
+    # the !c was not precise enough. Alice needs to be in the i state and nothing else
     p6 = Piece(
         "Bob c",
-        lambda config: config.state_bob == "w" and config.state_alice != "c",
+        lambda config: config.state_bob == "w" and config.state_alice == "i", 
         bob_state_c,
     )
     p7 = Piece("Bob i", lambda config: config.state_bob == "c", bob_state_i)
