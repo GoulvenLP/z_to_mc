@@ -27,26 +27,43 @@ class AliceBobConfig:
             self.state_bob == comparative.state_bob
         )
 
+
 class PropertyConfig:
-    
+
     def __init__(self):
-        self.state = "x"
+        self.state = "i"
 
     def __repr__(self):
         return "state: " + str(self.state)
-    
+
     def __hash__(self):
         return hash(self.state)
-    
+
     def __eq__(self, comparative):
         """
-            Compares an object to the current one.
-            @comparative: the object to compare to the self one
-            @return True if both objects are equal, else false
+        Compares an object to the current one.
+        @comparative: the object to compare to the self one
+        @return True if both objects are equal, else false
         """
-        if (not isinstance(comparative, PropertyConfig)):
-            return False;
-        return (self.state == comparative.state)
+        if not isinstance(comparative, PropertyConfig):
+            return False
+        return self.state == comparative.state
+
+
+class EquityConfig:
+    def __init__(self):
+        self.state = "0"
+
+    def __repr__(self):
+        return "state: " + str(self.state)
+
+    def __hash__(self):
+        return hash(self.state)
+
+    def __eq__(self, comparative):
+        if not isinstance(comparative, EquityConfig):
+            return False
+        return self.state == comparative.state
 
 
 def alice_and_bob_basic():
@@ -149,7 +166,7 @@ def alice_and_bob_advanced():
     # the !c was not precise enough. Alice needs to be in the i state and nothing else
     p6 = Piece(
         "Bob c",
-        lambda config: config.state_bob == "w" and config.state_alice == "i", 
+        lambda config: config.state_bob == "w" and config.state_alice == "i",
         bob_state_c,
     )
     p7 = Piece("Bob i", lambda config: config.state_bob == "c", bob_state_i)
@@ -157,17 +174,15 @@ def alice_and_bob_advanced():
     return Soup(AliceBobConfig(), [p1, p2, p3, p4, p5, p6, p7])
 
 
-
-
 # #########################
 # Properties automata     #
 # #########################
 def reachability():
     """
-    Property: not(alice@c and bob@c)
-                                            
+    P1: not(alice@c and bob@c)
+
     The automata have two state, the init state, and the final state.
-    If the automata to be verified reach the config (c,c), then the property automata goes to the 'w' state.    
+    If the automata to be verified reach the config (c,c), then the property automata goes to the 'w' state.
     """
 
     def init(step, config: PropertyConfig):
@@ -175,11 +190,10 @@ def reachability():
 
     def accept_state(step, config: PropertyConfig):
         config.state = "w"
-        
 
     p1 = Piece(
         "not(alice@c and bob@c)",
-        lambda step,config: not (
+        lambda step, config: not (
             step[0].state_alice == "c" and step[0].state_alice == "c"
         ),
         init,
@@ -187,7 +201,7 @@ def reachability():
 
     p2 = Piece(
         "alice@c and bob@c",
-        lambda step,config: step[0].state_alice == "c" and step[0].state_bob == "c",
+        lambda step, config: step[0].state_alice == "c" and step[0].state_bob == "c",
         accept_state,
     )
 
@@ -196,10 +210,10 @@ def reachability():
         lambda config: config.state == "w",
     )
 
-def deadlock():
 
+def deadlock():
     """
-    Property: not(deadlock)
+    P2: not(deadlock)
 
     """
 
@@ -212,13 +226,14 @@ def deadlock():
 
     p1 = Piece(
         "not(deadlock)",
-        lambda step,config: len(step[0].state_alice) != 0 or len(step[0].state_bob) != 0,
+        lambda step, config: len(step[0].state_alice) != 0
+        or len(step[0].state_bob) != 0,
         init,
     )
 
     p2 = Piece(
         "deadlock",
-        lambda step,config: isinstance(step[1],Stutter),
+        lambda step, config: isinstance(step[1], Stutter),
         deadlock_state,
     )
 
@@ -227,38 +242,44 @@ def deadlock():
         lambda config: config.state == "w",
     )
 
+
 def vivacity():
     """
-    Property: alice@c or bob@c
+    P3: alice@c or bob@c
     """
 
     def init(step, config: PropertyConfig):
-        config.state = "x"
+        config.state = "i"
 
     def accept_state(step, config: PropertyConfig):
         config.state = "y"
 
     p1 = Piece(
         "x---q--->x",
-        lambda step,config: config.state == "x" and step[0].state_alice == "c" or step[0].state_bob == "c",
+        lambda step, config: config.state == "i"
+        and step[0].state_alice == "c"
+        or step[0].state_bob == "c",
         init,
     )
 
     p2 = Piece(
         "x---!q--->x",
-        lambda step,config: config.state == "x" and not(step[0].state_alice == "c" or step[0].state_bob == "c"),
+        lambda step, config: config.state == "i"
+        and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         init,
     )
 
     p3 = Piece(
         "x---!q--->y",
-        lambda step,config: config.state == "x" and not(step[0].state_alice == "c" or step[0].state_bob == "c"),
+        lambda step, config: config.state == "i"
+        and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         accept_state,
     )
 
     p4 = Piece(
         "y---!q--->y",
-        lambda step,config: config.state == "y" and not(step[0].state_alice == "c" or step[0].state_bob == "c"),
+        lambda step, config: config.state == "y"
+        and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         accept_state,
     )
 
@@ -268,3 +289,48 @@ def vivacity():
     )
 
 
+def equity():
+    """
+    P4: if alice or bob wants to go to the c state, then they will go to the c state
+
+    p0: alice wants to go to the c state
+    q0: alice@c
+    p1: bob wants to go to the c state
+    q1: bob@c
+    """
+
+    def init(step, config: EquityConfig):
+        config.state = "0"
+
+    def accept_state_1(step, config: EquityConfig):
+        config.state = "1"
+
+    def accept_state_2(step, config: EquityConfig):
+        config.state = "2"
+
+    p1 = Piece("0---True--->0", lambda step, config: True, init)
+    p2 = Piece(
+        "0---p0&!q0--->1",
+        lambda step, config: step[0].state_alice == "w" and not (step[0].state_alice == "c"),
+        accept_state_1,
+    )
+    p3 = Piece(
+        "0---p1&!q1--->2",
+        lambda step, config: step[0].state_bob == "w" and not (step[0].state_bob == "c"),
+        accept_state_2,
+    )
+    p4 = Piece(
+        "1---!q0--->1",
+        lambda step, config: not (step[0].state_alice == "c"),
+        accept_state_1,
+    )
+    p5 = Piece(
+        "2---!q1--->2",
+        lambda step, config: not (step[0].state_bob == "c"),
+        accept_state_2,
+    )
+
+    return (
+        Soup(EquityConfig(), [p1, p2, p3, p4, p5]),
+        lambda config: config.state == "1" or config.state == "2",
+    )

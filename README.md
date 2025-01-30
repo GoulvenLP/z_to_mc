@@ -33,10 +33,12 @@ Ce repository contient les travaux réalisés dans le cadre du projet *Zero to M
 
 ### Propiétés vérifiées
 
-- P1: not(alice@c and bob@c)
-- P2: not(deadlock)
-- P3:
-- P4:
+- (P1) Tout état doit vérifier « not (Alice@CS and Bob@CS) » – pour garantir
+l’exclusion mutuelle
+- (P2) Tout état doit avoir une transition sortante – pour garantir l’absence d’un
+deadlock.
+- (P3) Un des deux (Alice@CS ou Bob@CS) arrivera finalement dans la section critique.
+- (P4) Si un des deux hisse son drapeau il arrivera finalement dans la section critique.
 
 ### Fichiers clés pour l'exécution
 

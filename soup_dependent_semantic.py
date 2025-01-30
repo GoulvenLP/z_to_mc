@@ -6,7 +6,7 @@ from step_semantics_intersection import StepSemanticsIntersection
 from rr2rg import RR2RG
 from predicate_finder import predicate_finder
 from parent_tracer import ParentTracer
-from alice_bob_config import alice_and_bob_advanced, alice_and_bob_basic, alice_and_bob_deadlock, deadlock, reachability, vivacity
+from alice_bob_config import alice_and_bob_advanced, alice_and_bob_basic, alice_and_bob_deadlock, deadlock, reachability, vivacity, equity
 from init_rg import InitRG
 
 class SoupDependantSemantics(RootedDependentRelation):
@@ -59,21 +59,21 @@ def main():
 
     # P1: not (alice@c and bob@c)
     print("--------------------------------")
-    print("---- not(alice@c and bob@c) ----")
+    print("--------------P1----------------")
     properties, accept = reachability()
     for case in test_cases:
         verify_property(case["system"], properties, accept, case["description"])
 
     # P2: not (deadlock)
     print("\n--------------------------------")
-    print("--------- not(deadlock) --------")
+    print("--------------P2----------------")
     properties, accept = deadlock()
     for case in test_cases:
         verify_property(case["system"], properties, accept, case["description"])
 
     # P3: alice@c or bob@c
     print("\n--------------------------------")
-    print("--------- alice@c or bob@c --------")
+    print("--------------P3----------------")
     system = alice_and_bob_advanced()
     properties, accept = vivacity()
     ss = SoupSemantic(system)
@@ -101,5 +101,35 @@ def main():
     else:
         print("-> The property is verified!")
 
+
+    # P4: equity
+    print("\n--------------------------------")
+    print("--------------P4----------------")
+    system = alice_and_bob_advanced()
+    properties, accept = equity()
+    ss = SoupSemantic(system)
+    sp = SoupDependantSemantics(properties)
+    s_inter = StepSemanticsIntersection(ss, sp)
+    rr2rg = RR2RG(s_inter)
+    parent_tracer = ParentTracer(rr2rg)
+
+    def pred(config):
+        if accept(config[1]): # vient de l'automate de Bushi (contient des états d'acceptation)
+            inits = parent_tracer.neighbors(config)
+            rooted_graphc = InitRG(parent_tracer, inits)
+
+            assessment = predicate_finder(rooted_graphc, lambda cx: cx == config)
+            return assessment
+        return False
+    
+    solution = predicate_finder(parent_tracer, pred)
+    if solution:
+        print("-> The property is not verified!")
+        print("-> The counter example is:")
+        trace = parent_tracer.getTrace(solution)
+        for state in trace:
+            print(f" - {state}")
+    else:
+        print("-> The property is verified!")
 if __name__ == "__main__":
     main()
