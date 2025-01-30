@@ -3,20 +3,18 @@ from soup import Soup
 from stutter import Stutter
 
 
-global_turn = None # "Alice" or "Bob"
-
 class AliceBobConfigExtended:
 
     def __init__(self, state_alice="i", state_bob="i"):
         self.state_alice = state_alice
         self.state_bob = state_bob
-
+        self.global_turn = None
 
     def __repr__(self):
-        return "Alice: " + str(self.state_alice) + ", Bob: " + str(self.state_bob)
+        return "Alice: " + str(self.state_alice) + ", Bob: " + str(self.state_bob + ", Turn: " + str(self.global_turn))
 
     def __hash__(self):
-        return hash((self.state_alice, self.state_bob))
+        return hash((self.state_alice, self.state_bob, self.global_turn))
 
     def __eq__(self, comparative):
         """
@@ -27,7 +25,7 @@ class AliceBobConfigExtended:
         if not isinstance(comparative, AliceBobConfigExtended):
             return False
         return (self.state_alice == comparative.state_alice) and (
-            self.state_bob == comparative.state_bob
+            self.state_bob == comparative.state_bob and self.global_turn == comparative.global_turn
         )
     
 
@@ -39,31 +37,30 @@ def alice_and_bob_petersen():
 
     def alice_state_w(config: AliceBobConfigExtended):
         config.state_alice = "w"
-        global_turn = "Bob"
+        config.global_turn = "Bob"
 
     def alice_state_c(config: AliceBobConfigExtended):
         config.state_alice = "c"
-        global_turn = "Alice"
 
     def bob_state_i(config: AliceBobConfigExtended):
         config.state_bob = "i"
 
     def bob_state_w(config: AliceBobConfigExtended):
         config.state_bob = "w"
-        global_turn = "Alice"
+        config.global_turn = "Alice"
 
     def bob_state_c(config: AliceBobConfigExtended):
         config.state_bob = "c"
-        global_turn = "Bob"
 
 
     p1 = Piece("Alice w", lambda config: config.state_alice == "i", alice_state_w)
 
     p2 = Piece(
         "Alice c",
-        lambda config: config.state_alice == "w" and (config.state_bob != "i" or global_turn == "Bob"),
+        lambda config: config.state_alice == "w" and (config.state_bob == "i" or config.global_turn == "Alice"),
         alice_state_c,
     )
+
     p3 = Piece("Alice i", lambda config: config.state_alice == "c", alice_state_i)
 
     p4 = Piece("Bob w", lambda config: config.state_bob == "i", bob_state_w)
@@ -71,7 +68,7 @@ def alice_and_bob_petersen():
     # the !c was not precise enough. Alice needs to be in the i state and nothing else
     p5 = Piece(
         "Bob c",
-        lambda config: config.state_bob == "w" and (config.state_alice == "i" or global_turn == "Bob"), 
+        lambda config: config.state_bob == "w" and (config.state_alice == "i" or config.global_turn == "Bob"), 
         bob_state_c,
     )
 
