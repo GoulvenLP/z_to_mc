@@ -113,6 +113,7 @@ def alice_and_bob_deadlock():
 
 
 def alice_and_bob_advanced():
+    
     def alice_state_i(config: AliceBobConfig):
         config.state_alice = "i"
 
