@@ -3,13 +3,13 @@ from soup import Soup
 from stutter import Stutter
 
 
-global_turn = None # "Alice" or "Bob"
 
 class AliceBobConfigExtended:
 
     def __init__(self, state_alice="i", state_bob="i"):
         self.state_alice = state_alice
         self.state_bob = state_bob
+        self.turn = None # "Alice" or "Bob"
 
 
     def __repr__(self):
@@ -39,29 +39,29 @@ def alice_and_bob_petersen():
 
     def alice_state_w(config: AliceBobConfigExtended):
         config.state_alice = "w"
-        global_turn = "Bob"
+        config.turn = "Bob"
 
     def alice_state_c(config: AliceBobConfigExtended):
         config.state_alice = "c"
-        global_turn = "Alice"
+        config.turn = "Alice"
 
     def bob_state_i(config: AliceBobConfigExtended):
         config.state_bob = "i"
 
     def bob_state_w(config: AliceBobConfigExtended):
         config.state_bob = "w"
-        global_turn = "Alice"
+        config.turn = "Alice"
 
     def bob_state_c(config: AliceBobConfigExtended):
         config.state_bob = "c"
-        global_turn = "Bob"
+        config.turn = "Bob"
 
 
     p1 = Piece("Alice w", lambda config: config.state_alice == "i", alice_state_w)
 
     p2 = Piece(
         "Alice c",
-        lambda config: config.state_alice == "w" and (config.state_bob != "i" or global_turn == "Bob"),
+        lambda config: config.state_alice == "w" and (config.state_bob != "i" or config.turn == "Bob"),
         alice_state_c,
     )
     p3 = Piece("Alice i", lambda config: config.state_alice == "c", alice_state_i)
@@ -71,7 +71,7 @@ def alice_and_bob_petersen():
     # the !c was not precise enough. Alice needs to be in the i state and nothing else
     p5 = Piece(
         "Bob c",
-        lambda config: config.state_bob == "w" and (config.state_alice == "i" or global_turn == "Bob"), 
+        lambda config: config.state_bob == "w" and (config.state_alice == "i" or config.turn == "Bob"), 
         bob_state_c,
     )
 
