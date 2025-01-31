@@ -56,18 +56,17 @@ def verify_property_vivacity(system, properties, accept, description):
     rr2rg = RR2RG(s_inter)
     parent_tracer = ParentTracer(rr2rg)
 
+    cycle_path = [None]  # to store the cycle path
+
     def pred(config):
         if accept(config[1]): # vient de l'automate de Bushi (contient des états d'acceptation)
             inits = parent_tracer.neighbors(config)
             rooted_graphc = ParentTracer(InitRG(parent_tracer, inits))
 
             assessment = predicate_finder(rooted_graphc, lambda cx: cx == config)
-
+            
             if assessment:
-                print(" Trace for cycle found:")
-                trace = rooted_graphc.getTrace(assessment)
-                for state in trace:
-                    print(f" - {state}")
+                cycle_path[0] = assessment
                 return True
         return False
     
@@ -78,6 +77,9 @@ def verify_property_vivacity(system, properties, accept, description):
         trace = parent_tracer.getTrace(solution)
         for state in trace:
             print(f" - {state}")
+        cycle_trace = parent_tracer.getTrace(cycle_path[0])
+        for state in cycle_trace:    
+            print(f"|> {state}")
     else:
         print("-> The property is verified!")
 

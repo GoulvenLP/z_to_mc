@@ -62,7 +62,7 @@ class AliceBobAdvanced(RootedRelation):
             @config: configuration where to apply the action
             @action: action to apply to the configuration. Made of a tuple (alice, bob)
         """
-        return action
+        return [action]
 
 
     def getTuple(self):
