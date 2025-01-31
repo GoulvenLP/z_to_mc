@@ -54,6 +54,7 @@ def alice_and_bob_basic():
     """
     Alice and Bob basic automata
     """
+
     def alice_state_c(config: AliceBobConfig):
         config.state_alice = "c"
 
@@ -166,6 +167,82 @@ def alice_and_bob_advanced():
     return Soup(AliceBobConfig(), [p1, p2, p3, p4, p5, p6, p7])
 
 
+def alice_bob_reminder():
+    """
+    Alice and Bob with a new "w" state. Extra "r" state for bob
+    """
+
+    def alice_state_i(config: AliceBobConfig):
+        config.state_alice = "i"
+
+    def alice_state_w(config: AliceBobConfig):
+        config.state_alice = "w"
+
+    def alice_state_c(config: AliceBobConfig):
+        config.state_alice = "c"
+
+    def bob_state_i(config: AliceBobConfig):
+        config.state_bob = "i"
+
+    def bob_state_c(config: AliceBobConfig):
+        config.state_bob = "c"
+
+    def bob_state_w(config: AliceBobConfig):
+        config.state_bob = "w"
+
+    def bob_state_r(config: AliceBobConfig):
+        config.state_bob = "r"
+
+    p1 = Piece(
+        "Alice i-->w", 
+        lambda config: config.state_alice == "i", 
+        alice_state_w
+    )
+
+    p2 = Piece(
+        "Alice w-->c",
+        lambda config: config.state_alice == "w" and config.state_bob == "i",
+        alice_state_c,
+    )
+
+    p3 = Piece(
+        "Alice c-->i",
+        lambda config: config.state_alice == "c",
+        alice_state_i,
+    )
+
+    p4 = Piece(
+        "Bob i-->w", 
+        lambda config: config.state_bob == "i",
+        bob_state_w
+    )
+
+    p5 = Piece(
+        "Bob w-->c",
+        lambda config: config.state_bob == "w" and config.state_alice == "i",
+        bob_state_c,
+    )
+    p6 = Piece(
+        "Bob w-->r",
+        lambda config: config.state_bob == "w" and config.state_alice != "i",
+        bob_state_r,
+    )
+
+    p7 = Piece(
+        "Bob r-->c",
+        lambda config: config.state_bob == "r" and config.state_alice == "i",
+        bob_state_c,
+    )
+
+    p8 = Piece(
+        "Bob c-->i", 
+        lambda config: config.state_bob == "c", 
+        bob_state_i
+    )
+
+    return Soup(AliceBobConfig(), [p1, p2, p3, p4, p5, p6, p7, p8])
+
+
 # #########################
 # Properties automata     #
 # #########################
@@ -185,15 +262,13 @@ def reachability():
 
     p1 = Piece(
         "not(alice@c and bob@c)",
-        lambda step, config: not (
-            step[0].state_alice == "c" and step[0].state_alice == "c"
-        ),
+        lambda step, config: config.state =="i" and not (step[0].state_alice == "c" and step[0].state_alice == "c"),
         init,
     )
 
     p2 = Piece(
         "alice@c and bob@c",
-        lambda step, config: step[0].state_alice == "c" and step[0].state_bob == "c",
+        lambda step, config: config.state == "i" and (step[0].state_alice == "c" and step[0].state_bob == "c"),
         accept_state,
     )
 
@@ -247,13 +322,13 @@ def vivacity():
         config.state = "y"
 
     p1 = Piece(
-        "x---q--->i",
+        "x---q--->x",
         lambda step, config: config.state == "x" and (step[0].state_alice == "c" or step[0].state_bob == "c"),
         init,
     )
 
     p2 = Piece(
-        "x---!q--->i",
+        "x---!q--->x",
         lambda step, config: config.state == "x" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         init,
     )
@@ -266,7 +341,7 @@ def vivacity():
 
     p4 = Piece(
         "y---!q--->y",
-        lambda step, config: config.state == "x" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        lambda step, config: config.state == "y" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         accept_state,
     )
 
@@ -295,17 +370,18 @@ def equity():
     def accept_state_2(step, config: PropertyConfig):
         config.state = "2"
 
-
-    p1 = Piece("0---q1--->0", lambda step, config: config.state =="0", init)
+    p1 = Piece("0---q1--->0", lambda step, config: config.state == "0", init)
 
     p2 = Piece(
         "0---p0&!q0--->1",
-        lambda step, config: config.state == "0" and (step[0].state_alice != "i" and step[0].state_alice != "c"),
+        lambda step, config: config.state == "0"
+        and (step[0].state_alice != "i" and step[0].state_alice != "c"),
         accept_state_1,
     )
     p3 = Piece(
         "0---p1&!q1--->2",
-        lambda step, config: config.state == "0" and (step[0].state_bob != "i" and step[0].state_bob != "c"),
+        lambda step, config: config.state == "0"
+        and (step[0].state_bob != "i" and step[0].state_bob != "c"),
         accept_state_2,
     )
     p4 = Piece(

@@ -5,7 +5,7 @@ from step_semantics_intersection import StepSemanticsIntersection
 from rr2rg import RR2RG
 from predicate_finder import predicate_finder
 from parent_tracer import ParentTracer
-from alice_bob_config import alice_and_bob_advanced, alice_and_bob_basic, alice_and_bob_deadlock, deadlock, reachability, vivacity, equity
+from alice_bob_config import *
 from alice_bob_config_extended import alice_and_bob_petersen
 from init_rg import InitRG
 
@@ -82,16 +82,16 @@ def verify_property_vivacity(system, properties, accept, description):
     else:
         print("-> The property is verified!")
 
-
-
 def main():
     test_cases = [
         {"description": "alice&bob_basic", "system": alice_and_bob_basic()},
         {"description": "alice&bob_deadlock", "system": alice_and_bob_deadlock()},
         {"description": "alice&bob_advanced", "system": alice_and_bob_advanced()},
+        {"description": "alice&bob_reminder", "system": alice_bob_reminder()},
         {"description": "alice&bob_petersen", "system": alice_and_bob_petersen()},
     ]
 
+    
     # P1: not (alice@c and bob@c)
     print("--------------------------------")
     print("--------------P1----------------")
