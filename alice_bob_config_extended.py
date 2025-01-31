@@ -1,7 +1,5 @@
 from piece import Piece
 from soup import Soup
-from stutter import Stutter
-
 
 class AliceBobConfigExtended:
 
@@ -28,7 +26,6 @@ class AliceBobConfigExtended:
             self.state_bob == comparative.state_bob and self.global_turn == comparative.global_turn
         )
     
-
 
 def alice_and_bob_petersen():
 

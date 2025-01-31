@@ -59,10 +59,16 @@ def verify_property_vivacity(system, properties, accept, description):
     def pred(config):
         if accept(config[1]): # vient de l'automate de Bushi (contient des états d'acceptation)
             inits = parent_tracer.neighbors(config)
-            rooted_graphc = InitRG(parent_tracer, inits)
+            rooted_graphc = ParentTracer(InitRG(parent_tracer, inits))
 
             assessment = predicate_finder(rooted_graphc, lambda cx: cx == config)
-            return assessment
+
+            if assessment:
+                print(" Trace for cycle found:")
+                trace = rooted_graphc.getTrace(assessment)
+                for state in trace:
+                    print(f" - {state}")
+                return True
         return False
     
     solution = predicate_finder(parent_tracer, pred)
@@ -114,6 +120,6 @@ def main():
     properties, accept = equity()
     for case in test_cases:
         verify_property_vivacity(case["system"], properties, accept, case["description"])
-        
+
 if __name__ == "__main__":
     main()
