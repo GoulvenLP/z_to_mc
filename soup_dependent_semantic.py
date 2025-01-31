@@ -104,8 +104,6 @@ def main():
         verify_property_reachability(case["system"], properties, accept, case["description"])
 
 
-
-
     # P3: alice@c or bob@c
     print("\n--------------------------------")
     print("--------------P3----------------")

@@ -255,31 +255,26 @@ def vivacity():
         config.state = "y"
 
     p1 = Piece(
-        "x---q--->x",
-        lambda step, config: config.state == "i"
-        and step[0].state_alice == "c"
-        or step[0].state_bob == "c",
+        "i---q--->i",
+        lambda step, config: config.state == "i" and (step[0].state_alice == "c" or step[0].state_bob == "c"),
         init,
     )
 
     p2 = Piece(
-        "x---!q--->x",
-        lambda step, config: config.state == "i"
-        and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        "i---!q--->i",
+        lambda step, config: config.state == "i" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         init,
     )
 
     p3 = Piece(
-        "x---!q--->y",
-        lambda step, config: config.state == "i"
-        and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        "i---!q--->y",
+        lambda step, config: config.state == "i" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         accept_state,
     )
 
     p4 = Piece(
         "y---!q--->y",
-        lambda step, config: config.state == "y"
-        and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        lambda step, config: config.state == "y" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         accept_state,
     )
 
