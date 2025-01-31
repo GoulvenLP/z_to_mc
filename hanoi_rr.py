@@ -45,15 +45,15 @@ class HanoiRR(RootedRelation):
         :param configuration: Instance de HanoiState représentant l'état actuel.
         :return: Ensemble des nouvelles instances de HanoiState possibles.
         """
-        actions = set()
+        actions = []
         for src in range(configuration.n_towers):
             if configuration.towers[src]:  # Si la tour source n'est pas vide
                 for dest in range(configuration.n_towers):
                     if src != dest:
                         allowed, new_config = self.move(configuration, src, dest)
                         if allowed:
-                            actions.add(new_config)
-        return actions
+                            actions.append(new_config)
+        return [actions]
 
     def execute(self, configuration, action):
         """
