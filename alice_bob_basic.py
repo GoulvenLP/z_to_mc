@@ -52,7 +52,7 @@ class AliceBobBasic(RootedRelation):
             @config: config where to apply the action
             @action: action to apply
         """
-        return action
+        return [action]
 
 
     def getTuple(self):

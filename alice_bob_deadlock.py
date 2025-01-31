@@ -54,7 +54,7 @@ class AliceBobConfig(RootedRelation):
         :param action: Action à appliquer (nouvel état).
         :return: Nouvelle configuration.
         """
-        return action
+        return [action]
 
 
 def main():
