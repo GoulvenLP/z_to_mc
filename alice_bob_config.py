@@ -30,8 +30,8 @@ class AliceBobConfig:
 
 class PropertyConfig:
 
-    def __init__(self):
-        self.state = "i"
+    def __init__(self, initial_state):
+        self.state = initial_state
 
     def __repr__(self):
         return "state: " + str(self.state)
@@ -50,24 +50,10 @@ class PropertyConfig:
         return self.state == comparative.state
 
 
-class EquityConfig:
-    def __init__(self):
-        self.state = "0"
-
-    def __repr__(self):
-        return "state: " + str(self.state)
-
-    def __hash__(self):
-        return hash(self.state)
-
-    def __eq__(self, comparative):
-        if not isinstance(comparative, EquityConfig):
-            return False
-        return self.state == comparative.state
-
-
 def alice_and_bob_basic():
-
+    """
+    Alice and Bob basic automata
+    """
     def alice_state_c(config: AliceBobConfig):
         config.state_alice = "c"
 
@@ -90,6 +76,9 @@ def alice_and_bob_basic():
 
 
 def alice_and_bob_deadlock():
+    """
+    Alice and Bob with a new "w" state, that involves a deadlock.
+    """
 
     def alice_state_i(config: AliceBobConfig):
         config.state_alice = "i"
@@ -130,6 +119,9 @@ def alice_and_bob_deadlock():
 
 
 def alice_and_bob_advanced():
+    """
+    Alice and Bob with a new "w" state, and bob can go back to the "i" state to avoid a deadlock.
+    """
 
     def alice_state_i(config: AliceBobConfig):
         config.state_alice = "i"
@@ -206,7 +198,7 @@ def reachability():
     )
 
     return (
-        Soup(PropertyConfig(), [p1, p2]),
+        Soup(PropertyConfig(initial_state="i"), [p1, p2]),
         lambda config: config.state == "w",
     )
 
@@ -238,7 +230,7 @@ def deadlock():
     )
 
     return (
-        Soup(PropertyConfig(), [p1, p2]),
+        Soup(PropertyConfig(initial_state="i"), [p1, p2]),
         lambda config: config.state == "w",
     )
 
@@ -249,37 +241,37 @@ def vivacity():
     """
 
     def init(step, config: PropertyConfig):
-        config.state = "i"
+        config.state = "x"
 
     def accept_state(step, config: PropertyConfig):
         config.state = "y"
 
     p1 = Piece(
-        "i---q--->i",
-        lambda step, config: config.state == "i" and (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        "x---q--->i",
+        lambda step, config: config.state == "x" and (step[0].state_alice == "c" or step[0].state_bob == "c"),
         init,
     )
 
     p2 = Piece(
-        "i---!q--->i",
-        lambda step, config: config.state == "i" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        "x---!q--->i",
+        lambda step, config: config.state == "x" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         init,
     )
 
     p3 = Piece(
-        "i---!q--->y",
-        lambda step, config: config.state == "i" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        "x---!q--->y",
+        lambda step, config: config.state == "x" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         accept_state,
     )
 
     p4 = Piece(
         "y---!q--->y",
-        lambda step, config: config.state == "y" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
+        lambda step, config: config.state == "x" and not (step[0].state_alice == "c" or step[0].state_bob == "c"),
         accept_state,
     )
 
     return (
-        Soup(PropertyConfig(), [p1, p2, p3, p4]),
+        Soup(PropertyConfig(initial_state="x"), [p1, p2, p3, p4]),
         lambda config: config.state == "y",
     )
 
@@ -294,13 +286,13 @@ def equity():
     q1: bob@c
     """
 
-    def init(step, config: EquityConfig):
+    def init(step, config: PropertyConfig):
         config.state = "0"
 
-    def accept_state_1(step, config: EquityConfig):
+    def accept_state_1(step, config: PropertyConfig):
         config.state = "1"
 
-    def accept_state_2(step, config: EquityConfig):
+    def accept_state_2(step, config: PropertyConfig):
         config.state = "2"
 
 
@@ -328,6 +320,6 @@ def equity():
     )
 
     return (
-        Soup(EquityConfig(), [p1, p2, p3, p4, p5]),
+        Soup(PropertyConfig(initial_state="0"), [p1, p2, p3, p4, p5]),
         lambda config: config.state == "1" or config.state == "2",
     )

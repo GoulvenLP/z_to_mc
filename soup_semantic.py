@@ -1,7 +1,6 @@
 from rooted_relation import RootedRelation
 from copy import deepcopy
 from soup import Soup
-from program_1_config import program1
 from rr2rg import RR2RG
 from predicate_finder import predicate_finder
 from parent_tracer import ParentTracer
@@ -24,6 +23,9 @@ class SoupSemantic(RootedRelation):
         target = deepcopy(configuration)
         _ = piece.behavior(target)
         return [target] 
+
+
+
 
 def verify_properties(program, description):
     """
@@ -60,7 +62,6 @@ def verify_properties(program, description):
 
 def main():
     programs = [
-        (program1(), "Program 1"),
         (alice_and_bob_basic(), "Alice and Bob basic"),
         (alice_and_bob_deadlock(), "Alice and Bob deadlock"),
         (alice_and_bob_advanced(), "Alice and Bob Advanced")

@@ -1,6 +1,5 @@
 from rooted_dependent_relation import RootedDependentRelation
 from copy import deepcopy
-from program_1_config import program1, program1_parity_check
 from soup_semantic import SoupSemantic
 from step_semantics_intersection import StepSemanticsIntersection
 from rr2rg import RR2RG
@@ -82,6 +81,8 @@ def verify_property_vivacity(system, properties, accept, description):
             print(f"|> {state}")
     else:
         print("-> The property is verified!")
+
+
 
 def main():
     test_cases = [
