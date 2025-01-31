@@ -50,25 +50,25 @@ def alice_and_bob_petersen():
         config.state_bob = "c"
 
 
-    p1 = Piece("Alice w", lambda config: config.state_alice == "i", alice_state_w)
+    p1 = Piece("Alice i-->w", lambda config: config.state_alice == "i", alice_state_w)
 
     p2 = Piece(
-        "Alice c",
+        "Alice w-->c",
         lambda config: config.state_alice == "w" and (config.state_bob == "i" or config.global_turn == "Alice"),
         alice_state_c,
     )
 
-    p3 = Piece("Alice i", lambda config: config.state_alice == "c", alice_state_i)
+    p3 = Piece("Alice c-->i", lambda config: config.state_alice == "c", alice_state_i)
 
-    p4 = Piece("Bob w", lambda config: config.state_bob == "i", bob_state_w)
+    p4 = Piece("Bob i-->w", lambda config: config.state_bob == "i", bob_state_w)
 
     # the !c was not precise enough. Alice needs to be in the i state and nothing else
     p5 = Piece(
-        "Bob c",
+        "Bob w-->c",
         lambda config: config.state_bob == "w" and (config.state_alice == "i" or config.global_turn == "Bob"), 
         bob_state_c,
     )
 
-    p6 = Piece("Bob i", lambda config: config.state_bob == "c", bob_state_i)
+    p6 = Piece("Bob c-->i", lambda config: config.state_bob == "c", bob_state_i)
 
     return Soup(AliceBobConfigExtended(), [p1, p2, p3, p4, p5, p6])

@@ -303,25 +303,27 @@ def equity():
     def accept_state_2(step, config: EquityConfig):
         config.state = "2"
 
-    p1 = Piece("0---True--->0", lambda step, config: True, init)
+
+    p1 = Piece("0---q1--->0", lambda step, config: config.state =="0", init)
+
     p2 = Piece(
         "0---p0&!q0--->1",
-        lambda step, config: step[0].state_alice == "w" and not (step[0].state_alice == "c"),
+        lambda step, config: config.state == "0" and (step[0].state_alice != "i" and step[0].state_alice != "c"),
         accept_state_1,
     )
     p3 = Piece(
         "0---p1&!q1--->2",
-        lambda step, config: step[0].state_bob == "w" and not (step[0].state_bob == "c"),
+        lambda step, config: config.state == "0" and (step[0].state_bob != "i" and step[0].state_bob != "c"),
         accept_state_2,
     )
     p4 = Piece(
         "1---!q0--->1",
-        lambda step, config: not (step[0].state_alice == "c"),
+        lambda step, config: config.state == "1" and step[0].state_alice != "c",
         accept_state_1,
     )
     p5 = Piece(
         "2---!q1--->2",
-        lambda step, config: not (step[0].state_bob == "c"),
+        lambda step, config: config.state == "2" and step[0].state_bob != "c",
         accept_state_2,
     )
 
