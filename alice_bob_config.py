@@ -201,7 +201,7 @@ def alice_bob_reminder():
 
     p2 = Piece(
         "Alice w-->c",
-        lambda config: config.state_alice == "w" and config.state_bob == "i",
+        lambda config: config.state_alice == "w" and (config.state_bob == "i" or config.state_bob == "r"),
         alice_state_c,
     )
 
